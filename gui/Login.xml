@@ -1,0 +1,24 @@
+<dialog id="dlg_login" title="Login to Mastodon">
+    <vgroup>
+        <Text>
+            Please click on the following link to\n
+            open the login window in your browser.\n
+            \n
+            After you have logged in successfully,\n
+            please copy the auth code shown on\n
+            your browser, to the "code" field below.\n
+            \n
+            Click Save to save the token to the cache.
+        </Text>
+        <hyperlink id="lnk_login" label="Click me">https://blitterstudio.com</hyperlink>
+        <rectangle/>
+        <Text>Code:</Text>
+        <TextEntry id="txt_code"></TextEntry>
+        <rectangle/>
+
+        <hgroup>
+            <button id="btn_LoginSaveCode">Save</button>
+            <button id="btn_LoginCancel">Cancel</button>
+        </hgroup>
+    </vgroup>
+</dialog>

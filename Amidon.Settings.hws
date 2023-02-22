@@ -1,0 +1,93 @@
+/*
+** Amidon Settings handling
+*/
+
+; Create server directory if it doesn't exist
+; This will hold the server-specific tokens and app credentials
+Function p_CreateServerDir()
+    If Not EmptyStr(settings.server) And Not Exists("cache/" .. settings.server)
+        If #DEBUG Then DebugPrint("Server directory not found in cache, creating it now")
+        MakeDirectory("cache/" .. settings.server)        
+    EndIf
+EndFunction
+
+; These are separate per server
+Function p_SetDefaultServerSettings()
+    creds = {
+        client_id = "",
+        client_secret = ""
+    }
+EndFunction
+
+; Set the default settings
+Function p_SetDefaultSettings()
+    ; Global application settings
+    settings = {
+		gui_mode = 0,
+		server = ""
+	}
+EndFunction
+
+; Parse settings from the GUI dialog
+Function p_ParseSettings()
+    settings.server = moai.Get("txt_server", "Text")
+    settings.gui_mode = moai.Get("rdo_gui", "Active")
+EndFunction
+
+; Ensure server setting doesn't start with HTTP/HTTPS (we add that ourselves)
+Function p_SanitizeSettings()
+    If StartsWith(settings.server, "https://")
+        settings.server = UnrightStr(settings.server, 8)
+    ElseIf StartsWith(settings.server, "http://")
+        settings.server = UnrightStr(settings.server, 7)
+    EndIf
+EndFunction
+
+; Save settings to JSON file
+Function p_SaveSettings()
+    p_SanitizeSettings()
+    OpenFile(settings_file, "settings.json", #MODE_WRITE)
+	WriteTable(settings_file, settings, {Adapter = "default"})
+	CloseFile(settings_file)
+    
+    If Not (settings.server = Nil)
+        p_CreateServerDir()
+        p_GetServerAuthorization()
+    EndIf
+EndFunction
+
+; Save Server-specific settings (tokens, client credentials)
+Function p_SaveServerSetting(index, item, type)
+    If settings.server = Nil Or EmptyStr(settings.server) Then Return
+    p_CreateServerDir()
+    OpenFile(1, "cache/" .. settings.server .. "/" .. type, #MODE_WRITE)
+
+    If #DEBUG Then DebugPrint("Received Save Server Setting request, for type:", type)
+    If type = "auth_code"
+        If #DEBUG Then DebugPrint("Writing Line:", item)
+        WriteLine(1, item)
+    Else
+        If #DEBUG Then DebugPrint("Writing table:", item)
+        WriteTable(1, item, {Adapter = "default"})
+    EndIf
+    CloseFile(1)
+EndFunction
+
+; Load Server-specific settings (tokens, client credentials)
+Function p_GetServerSetting(type)
+    If settings.server = Nil Or EmptyStr(settings.server) Then Return(Nil)
+    If #DEBUG Then DebugPrint("Received request to Get Server Setting for type:", type)
+
+    p_CreateServerDir()
+    Local filename = "cache/" .. settings.server .. "/" .. type
+    If Exists(filename)
+        OpenFile(1, filename)
+        If Eof(1) Then Return(Nil)
+        Local table = ReadTable(1, {Adapter = "default"})
+        CloseFile(1)
+        
+        If type = "creds" Or type = "token" Then Return(table)
+    Else
+        Return(Nil)
+    EndIf
+EndFunction

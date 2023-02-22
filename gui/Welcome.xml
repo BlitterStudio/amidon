@@ -1,0 +1,19 @@
+<dialog id="dlg_welcome" title="Welcome to Amidon!">
+   <vgroup>
+      <image brush="2"/>
+      <Text>
+         Welcome to Amidon!\n
+         \n
+         No existing settings were found, so you will need to provide\n
+         the Mastodon server instance you would like to connect to,\n
+         and you can optionally login as well. If you don't login,\n
+         you will only have access to the public information the\n
+         server provides.\n
+         \n
+         You can also select the GUI layout you prefer.\n
+         This can also be changed later in the application settings.\n
+      </Text>
+      <rectangle/>
+      <button id="btn_WelcomeDialogOK">Open Settings</button>
+   </vgroup>
+</dialog>

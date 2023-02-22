@@ -1,0 +1,312 @@
+﻿/*
+** Amidon Domain logic
+*/
+
+/*
+** Deserialize JSON response to a Table and iterate through items
+*/
+Function p_DeserializeJson(type)
+    Local table = Nil
+    
+ ;   If #DEBUG 
+ ;       DebugPrint("Deserializing response for type:", type)
+ ;       DebugPrint("Received response in json:", json)
+ ;   EndIf
+
+    table = DeserializeTable(json)
+    json = Nil;
+
+    Switch type FallThrough
+    Case "notifications":
+    Case "mentions":
+    Case "posts":
+    Case "hashtags":
+    Case "news":
+    Case "foryou":
+    Case "local":
+    Case "federated":
+    Case "dm":
+    Case "favourites":
+    Case "bookmarks":
+    Case "lists":
+    Case "followrequests":
+        Local listview = "lv_" .. type
+        moai.Set(listview, "Quiet", True)
+        ForEach(table, p_WriteListView, type)
+        moai.Set(listview, "Quiet", False)
+        Break
+    Case "token":
+    Case "verify_account":
+    Case "publish_status":
+    Case "create_app":
+        Return(table)
+    EndSwitch
+EndFunction
+
+/*
+** Build the JSON response string
+** This callback might be called with chunks of data, not guaranteed to get the complete string in one go
+** Therefore we build the whole string here first, before deserializing it to a table
+*/
+Function p_ParseResponse(data$)
+    json = json .. data$
+EndFunction
+
+Function p_HttpGet(url, access_token)
+    e = hurl.Easy()
+    e:SetOpt_URL(url)
+;    If #DEBUG Then e:SetOpt_Verbose(True)
+
+    e:SetOpt_HTTPGet(True)
+    ;e:SetOpt_XOAuth2_Bearer(access_token) ;This didn't seem to work?
+    If Not access_token = Nil Then e:SetOpt_HTTPHeader({"Authorization: Bearer " .. access_token})
+    e:SetOpt_WriteFunction(p_ParseResponse)
+    e:Perform()
+    e:Close()
+EndFunction
+
+Function p_HttpPost(url, form, access_token)
+    e = hurl.Easy()
+    e:SetOpt_URL(url)
+;    If #DEBUG Then e:SetOpt_Verbose(True)
+
+    e:SetOpt_HTTPPost(form)
+    If Not access_token = Nil Then e:SetOpt_HTTPHeader({"Authorization: Bearer " .. access_token})
+    e:SetOpt_WriteFunction(p_ParseResponse)
+    e:Perform()
+    form:Free()
+    e:Close()
+EndFunction
+
+; Get own account information
+Function p_GetVerifyAccountCredentials()
+    If settings.server = Nil Or EmptyStr(settings.server) Then Return(Nil)
+    If token = Nil Or HasItem(token, "error") Or EmptyStr(token.access_token) Then Return(Nil)
+
+    Local api_endpoint = p_GetVerifyAccount()
+    Local url = "https://" .. settings.server .. api_endpoint
+
+    If #DEBUG Then DebugPrint("Calling ".. url .. " with access token:", token.access_token)
+    p_HttpGet(url, token.access_token)
+    Return(p_DeserializeJson("verify_account"))
+EndFunction
+
+/*
+** Get content from Mastodon instance
+*/
+Function p_GetContent(type)
+    If settings.server = Nil Or EmptyStr(settings.server) Then Return(Nil)
+    If token = Nil Or HasItem(token, "error") Or EmptyStr(token.access_token) Then Return(Nil)
+    Local api_endpoint = Nil
+
+    Switch type
+    Case "timeline":
+        api_endpoint = p_GetPublicTimeline()
+    Case "notifications":
+        api_endpoint = p_GetNotifications(last_notification_id)
+    Case "mentions"
+        api_endpoint = p_GetNotifications(last_mention_id, "mention")
+    Case "posts":
+        api_endpoint = p_GetTrendingPosts()
+    Case "hashtags":
+        api_endpoint = p_GetTrendingHashtags()
+    Case "news":
+        api_endpoint = p_GetTrendingLinks()
+    Case "foryou":
+        api_endpoint = p_GetSuggestions()
+    Case "local":
+        api_endpoint = p_GetLocalTimeline(last_local_timeline_id)
+    Case "federated":
+        api_endpoint = p_GetFederatedTimeline(last_federated_timeline_id)
+    Case "dm":
+        api_endpoint = p_GetConversations(last_dm_id)
+    Case "favourites":
+        api_endpoint = p_GetFavourites(last_favourite_id)
+    Case "bookmarks":
+        api_endpoint = p_GetBookmarks(last_bookmark_id)
+    Case "lists":
+        api_endpoint = p_GetLists(last_list_id)
+    Case "followrequests":
+        api_endpoint = p_GetFollowRequests(last_request_id)
+    EndSwitch
+
+    If #DEBUG Then DebugPrint("API endpoint:", api_endpoint)
+    Local url = "https://" .. settings.server .. api_endpoint
+
+    p_HttpGet(url, token.access_token)
+    p_DeserializeJson(type)
+EndFunction
+
+; POST retrieve Oauth access token
+Function p_GetAccessToken(code)
+    If settings.server = Nil Or EmptyStr(settings.server) Then Return(Nil)
+    Local api_endpoint = p_PostOauthToken()
+    Local url = "https://" .. settings.server .. api_endpoint
+
+    Local form = hurl.Form()
+    form:AddContent("client_id", creds.client_id)
+    form:AddContent("client_secret", creds.client_secret)
+    form:AddContent("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")
+    If code = Nil
+        form:AddContent("grant_type", "client_credentials")
+    Else
+        form:AddContent("grant_type", "authorization_code")
+        form:AddContent("code", code)
+        form:AddContent("scope", "read write follow")
+    EndIf
+
+    p_HttpPost(url, form)
+    Return(p_DeserializeJson("token"))
+EndFunction
+
+; POST create app
+Function p_RegisterAppWithServer()
+    If settings.server = Nil Or EmptyStr(settings.server) Then Return(Nil)
+    Local api_endpoint = p_PostCreateApp()
+    Local url = "https://" .. settings.server .. api_endpoint
+
+    Local form = hurl.Form()
+    form:AddContent("client_name", "Amidon")
+    form:AddContent("redirect_uris", "urn:ietf:wg:oauth:2.0:oob")
+    form:AddContent("scopes", "read write follow")
+
+    p_HttpPost(url, form)
+    Return(p_DeserializeJson("create_app"))
+EndFunction
+
+; Build the Authorize User URL
+Function p_GetAuthorizeUserUrl()
+    If settings.server = Nil Or EmptyStr(settings.server) Then Return(Nil)
+    Local api_endpoint = p_GetAuthorizeUser()
+    Local url = "https://" .. settings.server .. api_endpoint
+    url = url .. "?client_id=" .. creds.client_id
+    url = url .. "&scope=read+write+follow"
+    url = url .. "&redirect_uri=urn:ietf:wg:oauth:2.0:oob"
+    url = url .. "&response_type=code"
+    Return(url)
+EndFunction
+
+; Check if server directory contains client credentials
+; Create them if they are missing, load them otherwise
+; Request an token using those credentials
+; Save the token in the server directory
+Function p_GetServerAuthorization()
+    Local filename = "cache/" .. settings.server .. "/" .. "creds"
+    If Exists(filename)
+        ; Load server credentials file
+        creds = p_GetServerSetting("creds")
+        If #DEBUG Then DebugPrint("Loaded creds file, client_id:", creds.client_id)
+    Else
+        p_SetDefaultServerSettings()
+        creds = p_RegisterAppWithServer()
+        p_SaveServerSetting(0, creds, "creds")
+    EndIf
+
+    token = p_GetServerSetting("token")
+
+    If #DEBUG
+        If token = Nil 
+            DebugPrint("Token was NIL!")
+        ElseIf HasItem(token, "error") 
+            DebugPrint("Token response contains an error:", token.error)
+        ElseIf EmptyStr(token.access_token) 
+            DebugPrint("The access token is empty")
+        EndIf
+    EndIf
+
+    ; If we have no access token on file, get a new one from the server
+    If token = Nil Or HasItem(token, "error") Or EmptyStr(token.access_token)
+        token = p_GetAccessToken()
+        p_SaveServerSetting(0, token, "token")
+    EndIf
+
+EndFunction
+
+; Parse Authentication code from Dialog and send it to be saved
+Function p_SaveLoginAuthCode()
+    Local auth_code = moai.Get("txt_code", "Text")
+    If #DEBUG Then DebugPrint("Received auth_code:", auth_code)
+    token = p_GetAccessToken(auth_code)
+    p_SaveServerSetting(0, token, "token")
+EndFunction
+
+; Get the logged-in account avatar and save it in the cache
+Function p_GetAccountAvatar(force)
+    If account = Nil Or Not HasItem(account, "avatar") Or EmptyStr(account.avatar) Then Return
+    Local filename = "cache/" .. settings.server .. "/avatar.png"
+    If Not Exists (filename) Or force = True
+        ; The avatar is an HTTPS link to an image file
+        DownloadFile(account.avatar, {File = filename, Adapter = "hurl"})
+    EndIf
+    LoadBrush(user_avatar_brush, filename)
+    ScaleBrush(user_avatar_brush, "25%", "25%", True)
+    moai.Set("img_avatar", "Brush", user_avatar_brush)
+EndFunction
+
+; Post a new status (toot)
+Function p_PublishStatus(content)
+    If content = Nil
+        If #DEBUG Then DebugPrint("Received Publish status request, but content was empty")
+        Return
+    Else
+        If #DEBUG Then DebugPrint("Received status to publish:", content)
+    EndIf
+    If settings.server = Nil Or EmptyStr(settings.server)
+        If #DEBUG Then DebugPrint("Received Publish status request, but server setting was empty")
+        Return
+    EndIf
+    If token = Nil Or HasItem(token, "error") Or EmptyStr(token.access_token) 
+        If #DEBUG Then DebugPrint("Token is Nil or missing an access_token, cannot proceed")
+        Return
+    EndIf
+
+    Local api_endpoint = p_PostNewStatus()
+    Local url = "https://" .. settings.server .. api_endpoint
+
+    Local form = hurl.Form()
+    form:AddContent("status", content)
+    ;form:AddContent("media_ids[]", "")
+    ;form:AddContent("poll[options]]", "")
+    ;form:AddContent("poll[expires_in]", "")
+
+    p_HttpPost(url, form, token.access_token)
+
+    Local result = p_DeserializeJson("publish_status")
+    If #DEBUG Then DebugPrint("Publish status response:", result)
+    If HasItem(result, "error")
+        If #DEBUG Then DebugPrint("Response contains an error, publish failed")
+    Else
+        If #DEBUG Then DebugPrint("Content published successfully!")
+        moai.DoMethod("txtedit", "Clear")
+    EndIf
+EndFunction
+
+Function p_QuitApp()
+	End
+EndFunction
+
+/*
+** Handles all incoming events
+*/
+Function p_EventFunc(msg)
+	Switch msg.action
+	Case "RapaGUI":
+		Switch msg.attribute
+
+        ; Buttons
+        Case "Pressed":
+            p_GUIEvent(msg.id)
+
+        ; ListView items
+        Case "Active":
+            p_GUIEvent(msg.id)
+
+        ; Menu items
+        Case "Selected":
+			p_GUIEvent(UnrightStr(msg.id, 3))
+        
+        Case "CloseRequest":
+            p_QuitApp()
+        EndSwitch
+    EndSwitch
+EndFunction

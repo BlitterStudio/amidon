@@ -1,0 +1,303 @@
+/*
+** Amidon UI related functions
+*/
+
+Function p_ShowWelcomeDialog()
+    While Not Eof(welcome_dialog_file) Do welcome_dialog = welcome_dialog .. ReadLine(welcome_dialog_file)
+    moai.CreateDialog(welcome_dialog)
+    Local result = moai.DoMethod("dlg_welcome", "ShowModal")
+    If result = 0 Then End
+EndFunction
+
+Function p_OpenLoginDialog()
+    While Not Eof(login_dialog_file) Do login_dialog = login_dialog .. ReadLine(login_dialog_file)
+    moai.CreateDialog(login_dialog)
+    moai.Set("lnk_login", "URL", p_GetAuthorizeUserUrl())
+    moai.DoMethod("dlg_login", "ShowModal")
+EndFunction
+
+Function p_OpenSettingsDialog()
+    While Not Eof(settings_dialog_file) Do settings_dialog = settings_dialog .. ReadLine(settings_dialog_file)
+    moai.CreateDialog(settings_dialog)
+    moai.Set("txt_server", "Text", settings.server)
+    moai.Set("rdo_gui", "Active", settings.gui_mode)
+    Local result = moai.DoMethod("dlg_settings", "ShowModal")
+    If result = 1 Then p_SaveSettings()
+EndFunction
+
+Function p_ClearListView(type)
+    Local listview = "lv_" .. type
+    moai.DoMethod(listview, "Clear")
+EndFunction
+
+/*
+** Write item to the ListView
+*/
+Function p_WriteListView(index, item, type)
+    ;If #DEBUG Then DebugPrint("Received item of type: ", type)
+    ;If #DEBUG Then DebugPrint("Received item: ", item)
+    Switch type
+    Case "notifications":
+        ; If the new content is different than the last one we got, insert it at the top
+        If last_notification_id <> item["id"]
+            last_notification_id = item["id"]
+
+            Local content = item["account"]["display_name"]
+
+            Switch item["type"]
+            Case "mention":
+                content = content .. " mentioned you" .. "\n" .. item["status"]["content"]
+            Case "status":
+                content = content ..  " posted a new status" .. "\n" .. item["status"]["content"]
+            Case "reblog":
+                content = content ..  " boosted your post" .. "\n" .. item["status"]["content"]
+            Case "follow":
+                content = content ..  " followed you" .. "\n" ..  item["account"]["acct"]
+            Case "follow_request":
+                content = content ..  " requested to follow you" .. "\n" .. "\n"
+            Case "favourite":
+                content = content ..  " favourited your post" .. "\n" .. item["status"]["content"]
+            Case "poll":
+                content = content ..  " your poll has ended" .. "\n" .. item["status"]["content"]
+            Case "update":
+                content = content ..  " your post has been edited" .. "\n" .. item["status"]["content"]
+            EndSwitch
+
+            ; Add it to the Listview
+            moai.DoMethod("lv_notifications", "Insert", "Top", item["id"], base:StripHTML(content))
+        EndIf
+
+    Case "mentions":
+        ; If the new content is different than the last one we got, insert it at the top
+        If last_mention_id <> item["id"]
+            last_mention_id = item["id"]
+
+            Local content = item["account"]["display_name"] .. "\n" .. item["status"]["content"]
+            moai.DoMethod("lv_mentions", "Insert", "Top", item["id"], base:StripHTML(content))
+        EndIf
+
+    Case "posts":
+        Local content = item["account"]["display_name"] .. "\n" .. item["content"]
+        moai.DoMethod("lv_posts", "Insert", "Top", item["id"], base:StripHTML(content))
+
+    Case "hashtags":
+        Local content = "#" .. item["name"]
+        moai.DoMethod("lv_hashtags", "Insert", "Top", base:StripHTML(content))
+
+    Case "news":
+        Local content = item["author_name"] .. ": " .. item["title"]
+        moai.DoMethod("lv_news", "Insert", "Top", base:StripHTML(content))
+
+    Case "foryou":
+        Local content = item["account"]["display_name"] .. ": " .. item["account"]["acct"]
+        moai.DoMethod("lv_foryou", "Insert", "Top", base:StripHTML(content))
+
+    Case "local":
+        If last_local_timeline_id <> item["id"]
+            last_local_timeline_id = item["id"]
+
+            Local content = item["account"]["display_name"] .. "\n" .. item["content"]
+            moai.DoMethod("lv_local", "Insert", "Top", item["id"], base:StripHTML(content))
+        EndIf
+
+    Case "federated":
+        If last_federated_timeline_id <> item["id"]
+            last_federated_timeline_id = item["id"]
+
+            Local content = item["account"]["display_name"] .. "\n" .. item["content"]
+            moai.DoMethod("lv_federated", "Insert", "Top", item["id"], base:StripHTML(content))
+        EndIf
+
+    Case "dm":
+        If last_dm_id <> item["id"]
+            last_dm_id = item["id"]
+
+            If item["last_status"] <> Nil
+                Local content = item["last_status"]["account"]["display_name"] .. "\n" .. item["last_status"]["content"]
+                moai.DoMethod("lv_dm", "Insert", "Top", item["id"], base:StripHTML(content))
+            EndIf
+        EndIf
+
+    Case "favourites":
+        If last_favourite_id <> item["id"]
+            last_favourite_id = item["id"]
+
+            Local content = item["account"]["display_name"] .. "\n" .. item["content"]
+            moai.DoMethod("lv_favourites", "Insert", "Top", item["id"], base:StripHTML(content))
+        EndIf
+
+    Case "bookmarks":
+        If last_bookmark_id <> item["id"]
+            last_bookmark_id = item["id"]
+
+            Local content = item["account"]["display_name"] .. "\n" .. item["content"]
+            moai.DoMethod("lv_bookmarks", "Insert", "Top", item["id"], base:StripHTML(content))
+        EndIf
+
+    Case "lists":
+        If last_list_id <> item["id"]
+            last_list_id = item["id"]
+
+            moai.DoMethod("lv_lists", "Insert", "Top", item["id"], item["title"])
+        EndIf
+
+    Case "followrequests":
+        If last_request_id <> item["id"]
+            last_request_id = item["id"]
+
+            Local content = item["display_name"] .. ": " .. item["acct"]
+            moai.DoMethod("lv_followrequests", "Insert", "Top", item["id"], base:StripHTML(content))
+        EndIf
+
+    EndSwitch
+EndFunction
+
+Function p_SetUsernameLabel()
+    If Not account = Nil And HasItem(account, "acct") And Not EmptyStr(account.acct)
+        moai.Set("lbl_profile", "Text", "@" .. account.acct)
+    Else
+        moai.Set("lbl_profile", "Text", "Anonymous")
+    EndIf
+EndFunction
+
+Function p_SetServerLabel()
+    If Not EmptyStr(settings.server)
+        moai.Set("lbl_instance", "Text", settings.server)
+    Else
+        moai.Set("lbl_instance", "Text", "NONE")
+    EndIf
+EndFunction
+
+/*
+** Write item to HTMLView
+**
+** Unfortunately, this has problems with OS3's HTMLview MUI class currently:
+** - No more than 6 instances of the class in the app, otherwise it crashes on startup
+** - HTMLview doesn't work on OS3 with MUI versions higher than 3.9
+*/
+;Function p_WriteHtmlView(index, item)
+;    ; If the new content is different than the last one we got, insert it at the top
+;    If last_content <> item["content"]
+;        last_content = "<b>" .. item["account"]["username"] .. "</b> </br>" .. item["account"]["acct"] .. "<p>".. item["content"] .. "<hr/>"
+;        Local content = last_content .. moai.Get("html_notifications", "contents")
+;        moai.Set("html_notifications", "contents", "<HTML><BODY>" .. content .. "</BODY></HTML>")
+;    EndIf
+;EndFunction
+
+/*
+** Event handler for the GUI
+*/
+Function p_GUIEvent(id)
+    Switch id
+
+    Case "lv_notifications":
+        If #DEBUG Then DebugPrint("Notifications Listview selected item changed!")
+        selected_id = moai.DoMethod("lv_notifications", "GetEntry", "Active")
+
+    Case "lv_mentions":
+        If #DEBUG Then DebugPrint("Mentions Listview selected item changed!")
+        selected_id = moai.DoMethod("lv_mentions", "GetEntry", "Active")
+
+    Case "btn_getnotifications":
+        ; We can have either All or Mentions selected here, detect which one
+        Local type
+        If moai.Get("pv_notifications", "Active") = 0
+            type = "notifications"
+        Else
+            type = "mentions"
+        EndIf
+        
+        DisableLineHook() ; Temporarily disable this, to increase performance
+        p_GetContent(type)
+        EnableLineHook() ; Enable it again after we are done
+
+    Case "btn_gettrending":
+        ; Posts, Hashtags, News or For You
+        Local type
+
+        Switch moai.Get("pv_explore", "Active")
+        Case 0:
+            type = "posts"
+        Case 1:
+            type = "hashtags"
+        Case 2:
+            type = "news"
+        Case 3:
+            type = "foryou"
+        EndSwitch
+
+        DisableLineHook()
+        p_ClearListView(type)
+        p_GetContent(type)
+        EnableLineHook()
+
+; TODO these should be refactored to avoid repeating the same code
+    Case "btn_getlocal":
+        DisableLineHook()
+        p_GetContent("local")
+        EnableLineHook()
+
+    Case "btn_getfederated":
+        DisableLineHook()
+        p_GetContent("federated")
+        EnableLineHook()
+
+    Case "btn_getdms":
+        DisableLineHook()
+        p_GetContent("dm")
+        EnableLineHook()
+
+    Case "btn_getfavourites":
+        DisableLineHook()
+        p_GetContent("favourites")
+        EnableLineHook()
+
+    Case "btn_getbookmarks":
+        DisableLineHook()
+        p_GetContent("bookmarks")
+        EnableLineHook()
+
+    Case "btn_getlists":
+        DisableLineHook()
+        p_GetContent("lists")
+        EnableLineHook()
+
+    Case "btn_getfollowrequests":
+        DisableLineHook()
+        p_GetContent("followrequests")
+        EnableLineHook()
+
+    Case "btn_WelcomeDialogOK":
+        moai.DoMethod("dlg_welcome", "EndModal", 1)
+        p_OpenSettingsDialog()
+    Case "btn_SaveSettings":
+        p_ParseSettings()
+        p_SetServerLabel()
+        moai.DoMethod("dlg_settings", "EndModal", 1)
+    Case "btn_CancelSettings":
+        moai.DoMethod("dlg_settings", "EndModal", 0)
+    Case "btn_openlogin":
+        p_ParseSettings()
+        If token = Nil
+            p_GetServerAuthorization()
+        EndIf
+        p_OpenLoginDialog()
+    Case "btn_LoginSaveCode":
+        p_SaveLoginAuthCode()
+        moai.DoMethod("dlg_login", "EndModal", 1)
+        account = p_GetVerifyAccountCredentials()
+        p_SetUsernameLabel()
+        p_GetAccountAvatar(True)
+    Case "btn_Publish":
+        Local status = moai.Get("txtedit", "Text")
+        p_PublishStatus(status)
+    Case "btn_LoginCancel":
+        moai.DoMethod("dlg_login", "EndModal", 0)
+    Case "about":
+		moai.Request("Amidon", #ABOUTMSG, "OK")
+    Case "settings":
+        p_OpenSettingsDialog()
+    Case "quit":
+        p_QuitApp()
+	EndSwitch
+EndFunction

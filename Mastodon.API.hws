@@ -1,0 +1,196 @@
+/*
+* Mastodon API endpoints
+*/
+Function p_PostCreateApp()
+    Return("/api/v1/apps")
+EndFunction
+
+Function p_GetVerifyApp()
+    Return("/api/v1/apps/verify_credentials")
+EndFunction
+
+Function p_GetVerifyAccount()
+    Return("/api/v1/accounts/verify_credentials")
+EndFunction
+
+Function p_PostOauthToken()
+    Return("/oauth/token")
+EndFunction
+
+Function p_GetAuthorizeUser()
+    Return("/oauth/authorize")
+EndFunction
+
+Function p_GetPublicTimeline(since_id, limit)
+    Local endpoint = "/api/v1/timelines/public"
+
+    If since_id <> Nil Then endpoint = endpoint .. "&since_id=" .. since_id
+
+    If limit <> Nil
+        If since_id <> Nil Then endpoint = endpoint .. "&" Else endpoint = endpoint .. "?"
+        endpoint = endpoint .. "limit=" .. limit
+    EndIf
+
+    Return(endpoint)
+EndFunction
+
+Function p_GetLocalTimeline(since_id, limit)
+    Local endpoint = "/api/v1/timelines/public?local=true&only_media=false"
+
+    If since_id <> Nil Then endpoint = endpoint .. "&since_id=" .. since_id
+
+    If limit <> Nil
+        endpoint = endpoint .. "&limit=" .. limit
+    EndIf
+
+    Return(endpoint)
+EndFunction
+
+Function p_GetFederatedTimeline(since_id, limit)
+    Local endpoint = "/api/v1/timelines/public?remote=false&only_media=false"
+
+    If since_id <> Nil
+        endpoint = endpoint .. "&since_id=" .. since_id
+    EndIf
+
+    If limit <> Nil
+        endpoint = endpoint .. "&limit=" .. limit
+    EndIf
+
+    Return(endpoint)
+EndFunction
+
+Function p_GetTimelineHastag(hashtag)
+    Return("/api/v1/timelines/tag/" .. hashtag)
+EndFunction
+
+; Public accounts and statuses
+Function p_GetAccount(account_id)
+    Return("/api/v1/accounts/" .. account_id)
+EndFunction
+
+Function p_GetAccountStatuses(account_id)
+    Return("/api/v1/accounts/" .. account_id .. "/statuses")
+EndFunction
+
+Function p_GetStatusEntity(status_id)
+    Return("/api/v1/statuses/" .. status_id)
+EndFunction
+
+Function p_GetStatusRebloggedBy(status_id)
+    Return("/api/v1/statuses/" .. status_id .. "/reblogged_by")
+EndFunction
+
+Function p_GetStatusFavouritedBy(status_id)
+    Return("/api/v1/statuses/" .. status_id .. "/favourited_by")
+EndFunction
+
+Function p_GetStatusContext(status_id)
+    Return("/api/v1/statuses/" .. status_id .. "/context")
+EndFunction
+
+Function p_GetPoll(poll_id)
+    Return("/api/v1/polls/" .. poll_id)
+EndFunction
+
+; Public instance data
+Function p_GetInstanceInfo()
+    Return("/api/v1/instance")
+EndFunction
+
+Function p_GetInstancePeers()
+    Return("/api/v1/instance/peers")
+EndFunction
+
+Function p_GetInstanceActivity()
+    Return("/api/v1/instance/activity")
+EndFunction
+
+Function p_GetInstanceCustomEmojis()
+    Return("/api/v1/instance/custom_emojis")
+EndFunction
+
+; a directory of all available profiles
+Function p_GetDirectory()
+    Return("/api/v1/directory")
+EndFunction
+
+; trending posts
+Function p_GetTrendingPosts()
+    Return("/api/v1/trends/statuses")
+EndFunction
+
+; trending hashtags
+Function p_GetTrendingHashtags()
+    Return("/api/v1/trends/tags")
+EndFunction
+
+; trending links
+Function p_GetTrendingLinks()
+    Return("/api/v1/trends/links")
+EndFunction
+
+; Suggestions
+Function p_GetSuggestions()
+    Return("/api/v2/suggestions?limit=20")
+EndFunction
+
+;
+; AUTHENTICATED ENDPOINTS
+;
+
+; POST a new Status
+Function p_PostNewStatus()
+    Return("/api/v1/statuses")
+EndFunction
+
+; GET all notifications
+Function p_GetNotifications(since_id, type, limit)
+    Local endpoint = "/api/v1/notifications"
+
+    If since_id <> Nil Then endpoint = endpoint .. "?since_id=" .. since_id
+
+    If type <> Nil
+        If since_id <> Nil Then endpoint = endpoint .. "&" Else endpoint = endpoint .. "?"
+        endpoint = endpoint .. "types[]=" .. type
+    EndIf
+    If limit <> Nil
+        If since_id <> Nil Or type <> Nil Then endpoint = endpoint .. "&" Else endpoint = endpoint .. "?"
+        endpoint = endpoint .. "limit=" .. limit
+    EndIf
+
+    Return(endpoint)
+EndFunction
+
+; Conversations (DM)
+Function p_GetConversations(since_id)
+    Local endpoint = "/api/v1/conversations"
+    If since_id <> Nil Then endpoint = endpoint .. "?since_id=" .. since_id
+    Return(endpoint)
+EndFunction
+
+; Bookmarks
+Function p_GetBookmarks()
+    Return("/api/v1/bookmarks")
+EndFunction
+
+; Favourites
+Function p_GetFavourites(since_id)
+    Local endpoint = "/api/v1/favourites"
+    If since_id <> Nil Then endpoint = endpoint .. "?since_id=" .. since_id
+    Return(endpoint)
+EndFunction
+
+; Lists
+Function p_GetLists(since_id)
+    Local endpoint = "/api/v1/lists"
+    If since_id <> Nil Then endpoint = endpoint .. "?since_id=" .. since_id
+    Return(endpoint)
+EndFunction
+
+; Follow Requests
+Function p_GetFollowRequests(since_id)
+    Local endpoint = "/api/v1/follow_requests"
+    If since_id <> Nil Then endpoint = endpoint .. "?since_id=" .. since_id
+    Return(endpoint)
+EndFunction

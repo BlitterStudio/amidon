@@ -1,0 +1,144 @@
+/****************************************************************
+**                                                             **
+** Name:        Amidon                                         **
+** Description: An Amiga Mastodon client                       **
+** Author:      Dimitris Panokostas                            **
+** Version:     1.0                                            **
+** Date:        2022-12-11                                     **
+** Interpreter: Hollywood 9.1+                                 **
+**                                                             **
+****************************************************************/
+; Constants
+Const #ABOUTMSG = "Amidon\nA Mastodon Client for AmigaOS\nCopyright (C) 2023 by Dimitris Panokostas\n"
+Const #DEBUG = True ; Set this to True to get DEBUG output
+
+@VERSION 9,1
+@REQUIRE "hurl", {Link = True}
+@REQUIRE "RapaGUI", {Link = True}
+
+/*
+** Information about this app
+*/
+@APPTITLE "Amidon"
+@APPVERSION "$VER: Amidon 1.0 (2023-02-13)"
+@APPCOPYRIGHT "(C) Copyright 2022-2023 by Dimitris Panokostas"
+@APPAUTHOR "Dimitris Panokostas"
+@APPDESCRIPTION "A Mastodon client for AmigaOS"
+
+/*
+** Button and list view images
+*/
+@BRUSH 1, "assets/anonymous.png"
+@BRUSH 2, "assets/mastodon_logo-25%.png", {LoadAlpha = True}
+@BRUSH 3, "assets/Add.png", {LoadAlpha = True}
+@BRUSH 4, "assets/Chart2.png", {LoadAlpha = True}
+@BRUSH 5, "assets/Web.png", {LoadAlpha = True}
+@BRUSH 6, "assets/Comments.png", {LoadAlpha = True}
+@BRUSH 7, "assets/Refresh.png", {LoadAlpha = True}
+@BRUSH 8, "assets/Favorite.png", {LoadAlpha = True}
+@BRUSH 9, "assets/Tag-Purple.png", {LoadAlpha = True}
+@BRUSH 10, "assets/Rotate.png", {LoadAlpha = True}
+
+/*
+** The GUI xml definition
+*/
+; We reserve 1 for our prefs file, if it exists (see below)
+; We have 2 GUI options, depending on what the prefs file defines
+; The default is the single/simple view
+;@FILE 1, "settings.json"
+@FILE 2, "gui/Amidon_single.xml"
+@FILE 3, "gui/Amidon_multi.xml"
+@FILE 4, "gui/Welcome.xml"
+@FILE 5, "gui/Settings.xml"
+@FILE 6, "gui/Login.xml"
+
+@DISPLAY {Title = "Amidon", Sizeable = True, Layers = True}
+@INCLUDE "Amidon.Domain.hws"
+@INCLUDE "Amidon.Settings.hws"
+@INCLUDE "Amidon.UI.hws"
+@INCLUDE "Mastodon.API.hws"
+@INCLUDE "StripHTML.hws"
+
+; Global variables
+Global settings = Nil
+Global creds = Nil
+Global json = Nil
+Global token = Nil
+Global account = Nil
+
+Global settings_file = 1
+Global welcome_dialog_file = 4
+Global welcome_dialog = Nil
+Global settings_dialog_file = 5
+Global settings_dialog = Nil
+Global login_dialog_file = 6
+Global login_dialog = Nil
+
+Global user_avatar_brush = 6
+
+; Content related variables
+Global last_notification_id = Nil
+Global last_mention_id = Nil
+Global last_local_timeline_id = Nil
+Global last_federated_timeline_id = Nil
+Global last_dm_id = Nil
+Global last_favourite_id = Nil
+Global last_bookmark_id = Nil
+Global last_list_id = Nil
+Global last_request_id = Nil
+
+Global selected_id = Nil
+
+; Local variables
+Local gui_file = 2 ; Default to the simple GUI
+Local gui ; The GUI definition
+
+; Check if we should use the Advanced GUI
+; This needs to be checked before we initialize the app below
+If Exists("settings.json")
+	OpenFile(settings_file, "settings.json")
+	settings = ReadTable(settings_file, {Adapter = "default"})
+	CloseFile(settings_file)
+	If HasItem(settings, "gui_mode") And settings.gui_mode = 1 Then gui_file = 3
+EndIf
+
+; dynamically create GUI from an external *.xml file definition
+While Not Eof(gui_file) Do gui = gui .. ReadLine(gui_file)
+moai.CreateApp(gui)
+
+; listen to these events
+InstallEventHandler({RapaGUI = p_EventFunc})
+
+; We use a cache directory to store tokens, images etc.
+; If it doesn't exist (e.g. first run), we will create it now
+If Not Exists("cache")
+	If #DEBUG Then DebugPrint("Cache dir not found, creating it now")
+	MakeDirectory("cache")
+EndIf
+
+; Settings handling
+; If no settings exist yet, the we can show the Welcome dialog
+If Not Exists("settings.json")
+	p_SetDefaultSettings()
+	; We generate the file with the default settings
+	p_SaveSettings()
+	p_ShowWelcomeDialog()
+EndIf
+
+; If we have a server, try to load any existing access token
+If Not settings.server = Nil And Not EmptyStr(settings.server)
+	p_GetServerAuthorization()	
+	If #DEBUG Then DebugPrint("Token loaded from file: ", token.access_token)
+	account = p_GetVerifyAccountCredentials()
+EndIf
+
+moai.Set("main", "Open", True)
+
+p_SetServerLabel()
+p_SetUsernameLabel()
+p_GetAccountAvatar(False)
+
+; main loop
+Repeat
+	WaitEvent
+Forever

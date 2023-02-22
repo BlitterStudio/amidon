@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<application id="app">
+    <menubar id="menu">
+        <menu title="_File">
+            <item id="mn_settings">Settings</item>
+            <item id="mn_quit" shortcut="Ctrl-Q">_Quit</item>
+		</menu>
+        <menu title="Help">
+			<item id="mn_about" shortcut="Shift-F1">_About...</item>		
+		</menu>
+    </menubar>
+
+    <window id="main" title="Amidon" activate="true" menubar="menu" height="screen:60" width="screen:50">
+        <hgroup>
+            <vgroup frame="true" frametitle="Home">
+
+                <textentry id="txt_search" hint="Search or paste URL"/>
+                <hgroup>
+                    <image id="img_avatar" brush="1"/>
+                    <vgroup>
+                        <label id="lbl_profile" Align="Left">@long.username</label>
+                        <label id="lbl_instance" Align="Left">@long.instance.server.name</label>
+                    </vgroup>
+                    <rectangle/>
+                    <image brush="2"/>
+                </hgroup>
+
+                <texteditor id="txtedit" hint="What's on your mind?"/>
+
+                <hgroup>
+                    <button id="btn_addmedia" icon="3" tooltip="Add images, a video or an audio file"/>
+                    <button id="btn_addpoll" icon="4" tooltip="Add a poll"/>
+                    <button id="btn_changeprivacy" icon="5" tooltip="Change post privacy"/>
+                </hgroup>
+                <hgroup>
+                    <button id="btn_cw" tooltip="Add content warning">CW</button>
+                    <button id="btn_lang" tooltip="Change language">EN</button>
+                    <rectangle/>
+                </hgroup>
+
+                <hgroup>
+                    <rectangle/>
+                    <label id="lbl_chars">500</label>
+                </hgroup>
+
+                <hgroup>
+                    <rectangle/>
+                    <button id="btn_publish" tooltip="Publish toot">Publish!</button>
+                </hgroup>
+                <rectangle/>
+                <rectangle/>
+                <rectangle/>
+            </vgroup>
+
+            <vgroup frame="true" frametitle="Timeline">
+                <hgroup>
+                    <button id="btn_getcontent" tooltip="Refresh content">Refresh</button>
+                </hgroup>
+
+                <pageview>
+                    <vgroup title="Local">
+                        <htmlview id="html_local"/>
+                    </vgroup>
+                    <vgroup title="Federated">
+                        <htmlview id="html_federated"/>
+                    </vgroup>
+                </pageview>
+                
+            </vgroup>
+
+            <vgroup frame="true" frametitle="Notifications">
+                <hgroup>
+                    <button id="btn_getnotifications" tooltip="Refresh notifications">Refresh</button>
+                </hgroup>
+
+                <pageview id="pv_notifications">
+                        <hgroup title="All">
+                            <textview id="html_notifications" styled="true"/>
+                        </hgroup>
+                        <hgroup title="Mentions">
+                            <textview id="html_mentions"/>
+                        </hgroup>
+                </pageview>
+            </vgroup>
+
+        </hgroup>
+    </window>
+</application>

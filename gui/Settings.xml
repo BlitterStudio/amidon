@@ -1,0 +1,40 @@
+<dialog id="dlg_settings" title="Amidon Settings">
+    <vgroup>
+        <vgroup Frame="True" FrameTitle="Mastodon options">
+            <Text>
+                The Mastodon server to connect to.
+            </Text>
+            <hgroup>
+                <Text>Server:</Text>
+                <TextEntry id="txt_server" hint="e.g. mastodon.social"></TextEntry>
+            </hgroup>
+        </vgroup>
+
+        <vgroup Frame="True" FrameTitle="Login">
+            <Text>
+                You can login for your personalized feed,\n
+                or browse the server anonymously.
+            </Text>
+            <hgroup>
+                <rectangle/>
+                <button id="btn_openlogin">Login</button>
+            </hgroup>
+        </vgroup>
+
+        <vgroup Frame="True" FrameTitle="GUI options">
+            <radio id="rdo_gui" title="Layout">
+                <item>Simple GUI (single-column)</item>
+                <item>Advanced GUI (multi-column)</item>
+            </radio>
+            <Text>
+                You will have to restart Amidon for this change to\n
+                take effect!
+            </Text>
+        </vgroup>
+
+        <hgroup>
+            <button id="btn_SaveSettings">Save settings</button>
+            <button id="btn_CancelSettings">Cancel</button>
+        </hgroup>
+    </vgroup>
+</dialog>

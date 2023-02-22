@@ -1,0 +1,62 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Hollywood Main script",
+            "type": "shell",
+            "command": "${config:hollywood.exePath}",
+            "args": [
+                "${config:hollywood.mainFile}",
+                "-printerror"
+            ]
+        },
+        {
+            "label": "Run Hollywood Main script (nodebug)",
+            "type": "shell",
+            "command": "${config:hollywood.exePath}",
+            "args":[
+                "${config:hollywood.mainFile}",
+                "-nodebug"
+            ]
+        },
+        {
+            "label": "Compile Hollywood Main script to default target",
+            "type": "shell",
+            "command": "${config:hollywood.exePath}",
+            "args": [
+                "${config:hollywood.mainFile}",
+                "-compile",
+                "bin/${config:hollywood.mainOutputFile}",
+                "-exetype",
+                "${config:hollywood.outputExeType}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run the currently opened Hollywood script",
+            "type": "shell",
+            "command": "${config:hollywood.exePath}",
+            "args": [
+                "${file}",
+                "-printerror"
+            ]
+        },
+        {
+            "label": "Compile the currently opened Hollywood file to multiple targets ",
+            "type": "shell",
+            "command": "${config:hollywood.exePath}",
+            "args": [
+                "${file}",
+                "-compile",
+                "bin/${config:hollywood.mainOutputFile}",
+                "-exetype",
+                "'amigaos4|classic|morphos'"
+            ]
+        }
+    ]
+}

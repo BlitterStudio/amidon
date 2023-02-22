@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"hollywood.mainFile": "Amidon.hws",
+		"hollywood.outputExeType": "classic",
+		"hollywood.mainOutputFile": "Amidon_OS3"
+	}
+}
