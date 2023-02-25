@@ -195,6 +195,35 @@ Function p_GUIEvent(id)
         Local length = StrLen(moai.Get("txtedit", "Text"))
         moai.Set("lbl_chars", "Text", 500 - length)
 
+    Case "btn_reply":
+        If #DEBUG Then DebugPrint("Reply button pressed, selected Id was ".. selected_id)
+        If ToNumber(selected_id) > 0
+            ; TODO reply using the selected_id
+        EndIf
+
+    Case "btn_boost":
+        If #DEBUG Then DebugPrint("Boost button pressed, selected Id was ".. selected_id)
+        If ToNumber(selected_id) > 0
+            ; TODO boost using the selected_id
+        EndIf
+
+    Case "btn_favorite":
+        If #DEBUG Then DebugPrint("Favourite button pressed, selected Id was ".. selected_id)
+        If ToNumber(selected_id) > 0
+            ; TODO Favourite using the selected_id
+        EndIf
+
+    Case "btn_bookmark":
+        If #DEBUG Then DebugPrint("Bookmark button pressed, selected Id was ".. selected_id)
+        If ToNumber(selected_id) > 0
+            ; TODO Bookmark using the selected_id
+        EndIf
+    
+    Case "btn_more":
+        If #DEBUG Then DebugPrint("More button pressed, selected Id was ".. selected_id)
+        If ToNumber(selected_id) > 0
+            ; TODO More using the selected_id
+        EndIf
 
     Case "lv_notifications":
         If #DEBUG Then DebugPrint("Notifications Listview selected item changed!")
