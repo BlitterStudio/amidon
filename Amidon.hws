@@ -20,7 +20,7 @@ Const #DEBUG = True ; Set this to True to get DEBUG output
 ** Information about this app
 */
 @APPTITLE "Amidon"
-@APPVERSION "$VER: Amidon 1.0 (2023-02-13)"
+@APPVERSION "$VER: Amidon 1.0 (2023-02-25)"
 @APPCOPYRIGHT "(C) Copyright 2022-2023 by Dimitris Panokostas"
 @APPAUTHOR "Dimitris Panokostas"
 @APPDESCRIPTION "A Mastodon client for AmigaOS"
