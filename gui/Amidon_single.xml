@@ -26,7 +26,7 @@
             <pageview mode="List">
                 <vgroup title="Publish">
 
-                    <texteditor id="txtedit" hint="What's on your mind?"></texteditor>
+                    <texteditor id="txtedit" hint="What's on your mind?" notify="HasChanged"/>
 
                     <hgroup>
                         <button id="btn_addmedia" icon="3" tooltip="Add images, a video or an audio file"/>

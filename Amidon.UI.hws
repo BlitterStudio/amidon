@@ -190,6 +190,12 @@ EndFunction
 Function p_GUIEvent(id)
     Switch id
 
+    Case "txtedit":
+        If #DEBUG Then DebugPrint("TextEditor event triggered")
+        Local length = StrLen(moai.Get("txtedit", "Text"))
+        moai.Set("lbl_chars", "Text", 500 - length)
+
+
     Case "lv_notifications":
         If #DEBUG Then DebugPrint("Notifications Listview selected item changed!")
         selected_id = moai.DoMethod("lv_notifications", "GetEntry", "Active")

@@ -278,6 +278,7 @@ Function p_PublishStatus(content)
     Else
         If #DEBUG Then DebugPrint("Content published successfully!")
         moai.DoMethod("txtedit", "Clear")
+        moai.Set("lbl_chars", "Text", 500)
     EndIf
 EndFunction
 
@@ -293,6 +294,10 @@ Function p_EventFunc(msg)
 	Case "RapaGUI":
 		Switch msg.attribute
 
+        ; TextView
+        Case "HasChanged"
+            p_GUIEvent(msg.id)
+            
         ; Buttons
         Case "Pressed":
             p_GUIEvent(msg.id)
