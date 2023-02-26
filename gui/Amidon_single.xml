@@ -23,9 +23,16 @@
                 <image brush="2"/>
             </hgroup>
 
-            <pageview mode="List">
+            <pageview id="pv_main" mode="List">
                 <vgroup title="Publish">
 
+                    <hgroup>
+                        <Label id="lbl_reply_to" Align="Left">Reply to:</Label>
+                        <rectangle/>
+                        <rectangle/>
+                        <button id="btn_clear_reply_to" tooltip="Clear">X</button>
+                    </hgroup>
+                    <TextView id="txt_reply_to" Styled="True"/>
                     <texteditor id="txtedit" hint="What's on your mind?" notify="HasChanged"/>
 
                     <hgroup>
@@ -37,19 +44,15 @@
                     <hgroup>
                         <button id="btn_cw" tooltip="Add content warning">CW</button>
                         <button id="btn_lang" tooltip="Change language">EN</button>
-                        <rectangle/>
-                    </hgroup>
-
-                    <hgroup>
-                        <rectangle/>
+                         <rectangle/>
                         <label id="lbl_chars">500</label>
                     </hgroup>
 
                     <hgroup>
                         <rectangle/>
+                        <rectangle/>
                         <button id="btn_Publish" tooltip="Publish toot">Publish!</button>
                     </hgroup>
-                    <rectangle/>
                 </vgroup>
 
                 <vgroup title="Notifications">
@@ -71,7 +74,7 @@
                     <hgroup>
                         <button id="btn_reply" icon="6" tooltip="Reply"/>
                         <button id="btn_boost" icon="7" tooltip="Boost"/>
-                        <button id="btn_favorite" icon="8" tooltip="Favorite"/>
+                        <button id="btn_favourite" icon="8" tooltip="Favorite"/>
                         <button id="btn_bookmark" icon="9" tooltip="Bookmark"/>
                         <button id="btn_more" tooltip="More...">...</button>
                         <rectangle/>
