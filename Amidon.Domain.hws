@@ -272,9 +272,8 @@ Function p_PublishStatus(content)
     p_HttpPost(url, form, token.access_token)
 
     Local result = p_DeserializeJson("publish_status")
-    If #DEBUG Then DebugPrint("Publish status response:", result)
     If HasItem(result, "error")
-        If #DEBUG Then DebugPrint("Response contains an error, publish failed")
+        p_OpenGenericDialog("Publish failed dure to error:", result["error"])
     Else
         If #DEBUG Then DebugPrint("Content published successfully!")
         moai.DoMethod("txtedit", "Clear")

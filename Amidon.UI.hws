@@ -25,6 +25,14 @@ Function p_OpenSettingsDialog()
     If result = 1 Then p_SaveSettings()
 EndFunction
 
+Function p_OpenGenericDialog(message_line1, message_line2)
+    While Not Eof(generic_dialog_file) Do generic_dialog = generic_dialog .. ReadLine(generic_dialog_file)
+    moai.CreateDialog(generic_dialog)
+    moai.Set("lbl_message1", "Text", message_line1)
+    moai.Set("lbl_message2", "Text", message_line2)
+    moai.DoMethod("dlg_generic", "ShowModal")
+EndFunction
+
 Function p_ClearListView(type)
     Local listview = "lv_" .. type
     moai.DoMethod(listview, "Clear")
@@ -326,6 +334,8 @@ Function p_GUIEvent(id)
     Case "btn_Publish":
         Local status = moai.Get("txtedit", "Text")
         p_PublishStatus(status)
+    Case "btn_dlg_OK":
+        moai.DoMethod("dlg_generic", "EndModal", 0)
     Case "btn_LoginCancel":
         moai.DoMethod("dlg_login", "EndModal", 0)
     Case "about":
