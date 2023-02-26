@@ -55,24 +55,29 @@ Function p_WriteListView(index, item, type)
             Switch item["type"]
             Case "mention":
                 content = content .. " mentioned you" .. "\n" .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["status"]["id"], base:StripHTML(content))
             Case "status":
                 content = content ..  " posted a new status" .. "\n" .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["status"]["id"], base:StripHTML(content))
             Case "reblog":
                 content = content ..  " boosted your post" .. "\n" .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["status"]["id"], base:StripHTML(content))
             Case "follow":
                 content = content ..  " followed you" .. "\n" ..  item["account"]["acct"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["id"], base:StripHTML(content))
             Case "follow_request":
                 content = content ..  " requested to follow you" .. "\n" .. "\n"
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["id"], base:StripHTML(content))
             Case "favourite":
                 content = content ..  " favourited your post" .. "\n" .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["status"]["id"], base:StripHTML(content))
             Case "poll":
                 content = content ..  " your poll has ended" .. "\n" .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["status"]["id"], base:StripHTML(content))
             Case "update":
                 content = content ..  " your post has been edited" .. "\n" .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["status"]["id"], base:StripHTML(content))
             EndSwitch
-
-            ; Add it to the Listview
-            moai.DoMethod("lv_notifications", "Insert", "Top", item["id"], base:StripHTML(content))
         EndIf
 
     Case "mentions":
@@ -81,7 +86,7 @@ Function p_WriteListView(index, item, type)
             last_mention_id = item["id"]
 
             Local content = item["account"]["display_name"] .. "\n" .. item["status"]["content"]
-            moai.DoMethod("lv_mentions", "Insert", "Top", item["id"], base:StripHTML(content))
+            moai.DoMethod("lv_mentions", "Insert", "Top", item["status"]["id"], base:StripHTML(content))
         EndIf
 
     Case "posts":
@@ -176,6 +181,11 @@ Function p_SetServerLabel()
     EndIf
 EndFunction
 
+Function p_ClearReplyTo()
+    moai.Set("txt_reply_to", "Text", "")
+    selected_id = Nil
+    selected_content = Nil
+EndFunction
 /*
 ** Write item to HTMLView
 **
@@ -198,33 +208,36 @@ EndFunction
 Function p_GUIEvent(id)
     Switch id
 
+    Case "btn_clear_reply_to":
+        p_ClearReplyTo()
+
     Case "txtedit":
-        If #DEBUG Then DebugPrint("TextEditor event triggered")
         Local length = StrLen(moai.Get("txtedit", "Text"))
         moai.Set("lbl_chars", "Text", 500 - length)
 
     Case "btn_reply":
         If #DEBUG Then DebugPrint("Reply button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
-            ; TODO reply using the selected_id
+            moai.Set("txt_reply_to", "Text", selected_content)
+            moai.Set("pv_main", "Active", "First")
         EndIf
 
     Case "btn_boost":
         If #DEBUG Then DebugPrint("Boost button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
-            ; TODO boost using the selected_id
+            p_StatusAction(selected_id, "reblog")
         EndIf
 
-    Case "btn_favorite":
+    Case "btn_favourite":
         If #DEBUG Then DebugPrint("Favourite button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
-            ; TODO Favourite using the selected_id
+            p_StatusAction(selected_id, "favourite")
         EndIf
 
     Case "btn_bookmark":
         If #DEBUG Then DebugPrint("Bookmark button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
-            ; TODO Bookmark using the selected_id
+            p_StatusAction(selected_id, "bookmark")
         EndIf
     
     Case "btn_more":
@@ -234,12 +247,12 @@ Function p_GUIEvent(id)
         EndIf
 
     Case "lv_notifications":
-        If #DEBUG Then DebugPrint("Notifications Listview selected item changed!")
-        selected_id = moai.DoMethod("lv_notifications", "GetEntry", "Active")
+        selected_id, selected_content = moai.DoMethod("lv_notifications", "GetEntry", "Active")
+        If #DEBUG Then DebugPrint("Notifications Listview selected item changed, id: " .. selected_id)
 
     Case "lv_mentions":
-        If #DEBUG Then DebugPrint("Mentions Listview selected item changed!")
-        selected_id = moai.DoMethod("lv_mentions", "GetEntry", "Active")
+        selected_id, selected_content = moai.DoMethod("lv_mentions", "GetEntry", "Active")
+        If #DEBUG Then DebugPrint("Mentions Listview selected item changed, id: " .. selected_id)
 
     Case "btn_getnotifications":
         ; We can have either All or Mentions selected here, detect which one

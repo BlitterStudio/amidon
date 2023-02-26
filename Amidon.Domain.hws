@@ -262,9 +262,13 @@ Function p_PublishStatus(content)
 
     Local api_endpoint = p_PostNewStatus()
     Local url = "https://" .. settings.server .. api_endpoint
-
     Local form = hurl.Form()
     form:AddContent("status", content)
+    If moai.Get("txt_reply_to", "Text") <> Nil
+        If #DEBUG Then DebugPrint("Replying to toot with id: ".. selected_id)
+        form:AddContent("in_reply_to_id", selected_id)
+    EndIf
+    ; TODO
     ;form:AddContent("media_ids[]", "")
     ;form:AddContent("poll[options]]", "")
     ;form:AddContent("poll[expires_in]", "")
@@ -276,8 +280,36 @@ Function p_PublishStatus(content)
         p_OpenGenericDialog("Publish failed dure to error:", result["error"])
     Else
         If #DEBUG Then DebugPrint("Content published successfully!")
+        p_ClearReplyTo()
         moai.DoMethod("txtedit", "Clear")
         moai.Set("lbl_chars", "Text", 500)
+    EndIf
+EndFunction
+
+Function p_StatusAction(id, action)
+    If id = Nil
+        If #DEBUG Then DebugPrint("Received Favourite status request, but id was empty")
+        Return
+    EndIf
+    If settings.server = Nil Or EmptyStr(settings.server)
+        If #DEBUG Then DebugPrint("Received Publish status request, but server setting was empty")
+        Return
+    EndIf
+    If token = Nil Or HasItem(token, "error") Or EmptyStr(token.access_token) 
+        If #DEBUG Then DebugPrint("Token is Nil or missing an access_token, cannot proceed")
+        Return
+    EndIf
+
+    Local api_endpoint = p_PostNewStatus()
+    Local url = "https://" .. settings.server .. api_endpoint .. "/" .. id .. "/" .. action
+    Local form = hurl.Form()
+    p_HttpPost(url, form, token.access_token)
+
+    Local result = p_DeserializeJson("publish_status")
+    If HasItem(result, "error")
+        p_OpenGenericDialog("Action failed due to an error:", result["error"])
+    Else
+        ;TODO indicate success
     EndIf
 EndFunction
 
