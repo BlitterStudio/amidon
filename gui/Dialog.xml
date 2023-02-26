@@ -1,0 +1,12 @@
+<dialog id="dlg_generic" title="">
+    <vgroup>
+        <Label id="lbl_message1" Align="Left">ABCDEFGHIJKLNMOPQRSTABCDEFGHIJKLNMOPQRSTABCDEFGHIJKLNMOPQRST</Label>
+        <Label id="lbl_message2" Align="Left">ABCDEFGHIJKLNMOPQRSTABCDEFGHIJKLNMOPQRSTABCDEFGHIJKLNMOPQRST</Label>
+        <rectangle/>
+        <hgroup>
+            <rectangle/>
+            <button id="btn_dlg_OK">OK</button>
+            <rectangle/>
+        </hgroup>
+    </vgroup>
+</dialog>
