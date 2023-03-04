@@ -59,15 +59,17 @@
                     <button id="btn_getnotifications" tooltip="Refresh">Refresh</button>
                     <pageview id="pv_notifications">
                         <hgroup title="All">
-                            <Listview id="lv_notifications" Alternate="True" HRules="True" notify="active">
-                                <column hide="True" Width="0"/>
+                            <Listview id="lv_notifications" Alternate="True" HRules="True" notify="Active; DoubleClick">
                                 <column/>
+                                <column hide="True" Width="0"/>
+                                <column hide="True" Width="0"/>
                             </Listview>
                         </hgroup>
                         <hgroup title="Mentions">
-                            <Listview id="lv_mentions" Alternate="True" HRules="True" notify="active">
-                                <column hide="True" Width="0"/>
+                            <Listview id="lv_mentions" Alternate="True" HRules="True" notify="Active; DoubleClick">
                                 <column/>
+                                <column hide="True" Width="0"/>
+                                <column hide="True" Width="0"/>
                             </Listview>
                         </hgroup>
                     </pageview>
@@ -86,8 +88,9 @@
                     <pageview id="pv_explore">
                         <hgroup title="Posts">
                             <Listview id="lv_posts" Alternate="True" HRules="True" notify="active">
-                                <column hide="True" Width="0"/>
                                 <column/>
+                                <column hide="True" Width="0"/>
+                                <column hide="True" Width="0"/>
                             </Listview>
                         </hgroup>
                         <hgroup title="Hashtags">
@@ -111,56 +114,63 @@
                 <vgroup title="Local">
                     <button id="btn_getlocal" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_local" Alternate="True" HRules="True" notify="active">
-                        <column hide="True" Width="0"/>
                         <column/>
+                        <column hide="True" Width="0"/>
+                        <column hide="True" Width="0"/>
                     </Listview>
                 </vgroup>
 
                 <vgroup title="Federated">
                     <button id="btn_getfederated" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_federated" Alternate="True" HRules="True" notify="active">
-                        <column hide="True" Width="0"/>
                         <column/>
+                        <column hide="True" Width="0"/>
+                        <column hide="True" Width="0"/>
                     </Listview>
                 </vgroup>
 
                 <vgroup title="DMs">
                     <button id="btn_getdms" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_dm" Alternate="True" HRules="True" notify="active">
-                        <column hide="True" Width="0"/>
                         <column/>
+                        <column hide="True" Width="0"/>
+                        <column hide="True" Width="0"/>
                     </Listview>
                 </vgroup>
 
                 <vgroup title="Favourites">
                     <button id="btn_getfavourites" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_favourites" Alternate="True" HRules="True" notify="active">
-                        <column hide="True" Width="0"/>
                         <column/>
+                        <column hide="True" Width="0"/>
+                        <column hide="True" Width="0"/>
                     </Listview>
                 </vgroup>
 
                 <vgroup title="Bookmarks">
                     <button id="btn_getbookmarks" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_bookmarks" Alternate="True" HRules="True" notify="active">
-                        <column hide="True" Width="0"/>
                         <column/>
+                        <column hide="True" Width="0"/>
+                        <column hide="True" Width="0"/>
                     </Listview>
                 </vgroup>
 
                 <vgroup title="Lists">
                     <button id="btn_getlists" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_lists" Alternate="True" HRules="True" notify="active">
-                        <column hide="True" Width="0"/>
                         <column/>
+                        <column hide="True" Width="0"/>
+                        <column hide="True" Width="0"/>
                     </Listview>
                 </vgroup>
 
                 <vgroup title="Requests">
                     <button id="btn_getfollowrequests" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_followrequests" Alternate="True" HRules="True" notify="active">
-                        <column hide="True" Width="0"/>
                         <column/>
+                        <column hide="True" Width="0"/>
+                        <column hide="True" Width="0"/>
                     </Listview>
                 </vgroup>
 

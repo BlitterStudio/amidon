@@ -8,11 +8,6 @@
 Function p_DeserializeJson(type)
     Local table = Nil
     
- ;   If #DEBUG 
- ;       DebugPrint("Deserializing response for type:", type)
- ;       DebugPrint("Received response in json:", json)
- ;   EndIf
-
     table = DeserializeTable(json)
     json = Nil;
 
@@ -40,6 +35,8 @@ Function p_DeserializeJson(type)
     Case "publish_status":
     Case "create_app":
         Return(table)
+    Case "status":
+        Return(table["content"])
     EndSwitch
 EndFunction
 
@@ -135,6 +132,32 @@ Function p_GetContent(type)
 
     p_HttpGet(url, token.access_token)
     p_DeserializeJson(type)
+EndFunction
+
+; Get single item content
+Function p_GetSingleContent(selected_id, type)
+    If settings.server = Nil Or EmptyStr(settings.server) Then Return(Nil)
+    If token = Nil Or HasItem(token, "error") Or EmptyStr(token.access_token) Then Return(Nil)
+    Local api_endpoint = Nil
+
+    Switch type
+    Case "status":
+        api_endpoint = p_GetStatusEntity(selected_id)
+    Case "follow":
+        Return("")
+    Case "follow_request":
+        Return("")
+    Case "poll":
+        Return("")
+    Case "update":
+        Return("")
+    EndSwitch
+
+    If #DEBUG Then DebugPrint("API endpoint:", api_endpoint)
+    Local url = "https://" .. settings.server .. api_endpoint
+
+    p_HttpGet(url, token.access_token)
+    Return(p_DeserializeJson(type))
 EndFunction
 
 ; POST retrieve Oauth access token
@@ -336,6 +359,8 @@ Function p_EventFunc(msg)
         ; ListView items
         Case "Active":
             p_GUIEvent(msg.id)
+        Case "DoubleClick":
+            p_DoubleClickEvent(msg.id)
 
         ; Menu items
         Case "Selected":

@@ -20,7 +20,7 @@ Const #DEBUG = True ; Set this to True to get DEBUG output
 ** Information about this app
 */
 @APPTITLE "Amidon"
-@APPVERSION "$VER: Amidon 1.0 (2023-02-25)"
+@APPVERSION "$VER: Amidon 1.0 (2023-03-04)"
 @APPCOPYRIGHT "(C) Copyright 2022-2023 by Dimitris Panokostas"
 @APPAUTHOR "Dimitris Panokostas"
 @APPDESCRIPTION "A Mastodon client for AmigaOS"
@@ -52,6 +52,7 @@ Const #DEBUG = True ; Set this to True to get DEBUG output
 @FILE 5, "gui/Settings.xml"
 @FILE 6, "gui/Login.xml"
 @FILE 7, "gui/Dialog.xml"
+@FILE 8, "gui/HtmlView.xml"
 
 @DISPLAY {Title = "Amidon", Sizeable = True, Layers = True}
 @INCLUDE "Amidon.Domain.hws"
@@ -76,6 +77,8 @@ Global login_dialog_file = 6
 Global login_dialog = Nil
 Global generic_dialog_file = 7
 Global generic_dialog = Nil
+Global htmlview_dialog_file = 8
+Global htmlview_dialog = Nil
 
 Global user_avatar_brush = 6
 
@@ -92,6 +95,7 @@ Global last_request_id = Nil
 
 Global selected_id = Nil
 Global selected_content = Nil
+Global selected_type = Nil
 
 ; Local variables
 Local gui_file = 2 ; Default to the simple GUI

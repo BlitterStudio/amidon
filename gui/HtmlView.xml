@@ -1,0 +1,5 @@
+<dialog id="dlg_htmlview" title="">
+    <vgroup>
+        <htmlview id="htmlview_content"/>
+    </vgroup>
+</dialog>
