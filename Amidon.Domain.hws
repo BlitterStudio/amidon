@@ -36,7 +36,8 @@ Function p_DeserializeJson(type)
     Case "create_app":
         Return(table)
     Case "status":
-        Return(table["content"])
+        Local html_content = "<b>" .. table["account"]["username"] .. "</b> <br>" .. table["account"]["acct"] .. "<hr>" .. table["content"]
+        Return(html_content)
     EndSwitch
 EndFunction
 
