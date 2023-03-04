@@ -61,28 +61,28 @@ Function p_WriteListView(index, item, type)
 
             Switch item["type"]
             Case "mention":
-                content = content .. " mentioned you" .. "\n" .. item["status"]["content"]
+                content = content .. " mentioned you" .. ":" .. item["status"]["content"]
                 moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], "status")
             Case "status":
-                content = content ..  " posted a new status" .. "\n" .. item["status"]["content"]
+                content = content ..  " posted a new status" .. ":" .. item["status"]["content"]
                 moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], "status")
             Case "reblog":
-                content = content ..  " boosted your post" .. "\n" .. item["status"]["content"]
+                content = content ..  " boosted your post" .. ":" .. item["status"]["content"]
                 moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], "status")
             Case "follow":
-                content = content ..  " followed you" .. "\n" ..  item["account"]["acct"]
+                content = content ..  " followed you" .. ":" ..  item["account"]["acct"]
                 moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["id"], item["type"])
             Case "follow_request":
-                content = content ..  " requested to follow you" .. "\n" .. "\n"
+                content = content ..  " requested to follow you" .. ":" .. "\n"
                 moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["id"], item["type"])
             Case "favourite":
-                content = content ..  " favourited your post" .. "\n" .. item["status"]["content"]
+                content = content ..  " favourited your post" .. ":" .. item["status"]["content"]
                 moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], "status")
             Case "poll":
-                content = content ..  " your poll has ended" .. "\n" .. item["status"]["content"]
+                content = content ..  " your poll has ended" .. ":" .. item["status"]["content"]
                 moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], item["type"])
             Case "update":
-                content = content ..  " your post has been edited" .. "\n" .. item["status"]["content"]
+                content = content ..  " your post has been edited" .. ":" .. item["status"]["content"]
                 moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], item["type"])
             EndSwitch
         EndIf
@@ -92,12 +92,12 @@ Function p_WriteListView(index, item, type)
         If last_mention_id <> item["id"]
             last_mention_id = item["id"]
 
-            Local content = item["account"]["display_name"] .. "\n" .. item["status"]["content"]
+            Local content = item["account"]["display_name"] .. ":" .. item["status"]["content"]
             moai.DoMethod("lv_mentions", "Insert", "Top", base:StripHTML(content), item["status"]["id"], "status")
         EndIf
 
     Case "posts":
-        Local content = item["account"]["display_name"] .. "\n" .. item["content"]
+        Local content = item["account"]["display_name"] .. ":" .. item["content"]
         moai.DoMethod("lv_posts", "Insert", "Top", base:StripHTML(content), item["id"], "status")
 
     Case "hashtags":
@@ -116,7 +116,7 @@ Function p_WriteListView(index, item, type)
         If last_local_timeline_id <> item["id"]
             last_local_timeline_id = item["id"]
 
-            Local content = item["account"]["display_name"] .. "\n" .. item["content"]
+            Local content = item["account"]["display_name"] .. ":" .. item["content"]
             moai.DoMethod("lv_local", "Insert", "Top", base:StripHTML(content), item["id"], "status")
         EndIf
 
@@ -124,7 +124,7 @@ Function p_WriteListView(index, item, type)
         If last_federated_timeline_id <> item["id"]
             last_federated_timeline_id = item["id"]
 
-            Local content = item["account"]["display_name"] .. "\n" .. item["content"]
+            Local content = item["account"]["display_name"] .. ":" .. item["content"]
             moai.DoMethod("lv_federated", "Insert", "Top", base:StripHTML(content), item["id"], "status")
         EndIf
 
@@ -133,7 +133,7 @@ Function p_WriteListView(index, item, type)
             last_dm_id = item["id"]
 
             If item["last_status"] <> Nil
-                Local content = item["last_status"]["account"]["display_name"] .. "\n" .. item["last_status"]["content"]
+                Local content = item["last_status"]["account"]["display_name"] .. ":" .. item["last_status"]["content"]
                 moai.DoMethod("lv_dm", "Insert", "Top", base:StripHTML(content), item["id"], "status")
             EndIf
         EndIf
@@ -142,7 +142,7 @@ Function p_WriteListView(index, item, type)
         If last_favourite_id <> item["id"]
             last_favourite_id = item["id"]
 
-            Local content = item["account"]["display_name"] .. "\n" .. item["content"]
+            Local content = item["account"]["display_name"] .. ":" .. item["content"]
             moai.DoMethod("lv_favourites", "Insert", "Top", base:StripHTML(content), item["id"], "status")
         EndIf
 
@@ -150,7 +150,7 @@ Function p_WriteListView(index, item, type)
         If last_bookmark_id <> item["id"]
             last_bookmark_id = item["id"]
 
-            Local content = item["account"]["display_name"] .. "\n" .. item["content"]
+            Local content = item["account"]["display_name"] .. ":" .. item["content"]
             moai.DoMethod("lv_bookmarks", "Insert", "Top", base:StripHTML(content), item["id"], "status")
         EndIf
 
@@ -214,14 +214,16 @@ EndFunction
 ** Event handlers for the GUI
 */
 Function p_DoubleClickEvent(id)
-    Switch id
+    Switch id FallThrough
 
     Case "lv_notifications":
+    Case "lv_mentions":
         If #DEBUG Then DebugPrint("Double click on Notifications listview triggered")
         If ToNumber(selected_id) > 0
             Local status = p_GetSingleContent(selected_id, selected_type)
             p_OpenHtmlView(status)
         EndIf
+        Break
 
     EndSwitch 
 EndFunction
