@@ -38,7 +38,7 @@ Function p_OpenHtmlView(content_html)
     moai.CreateDialog(htmlview_dialog)
 
     If #DEBUG Then DebugPrint("Opening HTMLview window with content: " .. content_html)
-    moai.Set("htmlview_content", "Contents", "<HTML><BODY>" .. content_html .. "</BODY></HTML>")
+    moai.Set("htmlview_content", "Contents", content_html)
     moai.DoMethod("dlg_htmlview", "ShowModal")
 EndFunction
 
