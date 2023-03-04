@@ -1,5 +1,11 @@
 <dialog id="dlg_htmlview" title="">
     <vgroup>
         <htmlview id="htmlview_content"/>
+        <hgroup>
+            <button id="btn_reply2" icon="6" tooltip="Reply"/>
+            <button id="btn_boost2" icon="7" tooltip="Boost"/>
+            <button id="btn_favourite2" icon="8" tooltip="Favorite"/>
+            <button id="btn_bookmark2" icon="9" tooltip="Bookmark"/>
+        </hgroup>
     </vgroup>
 </dialog>
