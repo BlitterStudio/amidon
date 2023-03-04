@@ -368,9 +368,9 @@ Function p_EventFunc(msg)
         Case "DoubleClick":
             p_DoubleClickEvent(msg.id)
 
-        ; Menu items
+        ; Menu items / Toggle buttons
         Case "Selected":
-			p_GUIEvent(UnrightStr(msg.id, 3))
+			p_GUIEvent(msg.id)
         
         Case "CloseRequest":
             p_QuitApp()

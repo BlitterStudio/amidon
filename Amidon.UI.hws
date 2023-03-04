@@ -229,54 +229,54 @@ Function p_DoubleClickEvent(id)
 EndFunction
 
 Function p_GUIEvent(id)
-    Switch id
+    Switch id FallThrough
 
     Case "btn_clear_reply_to":
         p_ClearReplyTo()
-
+        Break
     Case "txtedit":
         Local length = StrLen(moai.Get("txtedit", "Text"))
         moai.Set("lbl_chars", "Text", 500 - length)
-
+        Break
     Case "btn_reply":
         If #DEBUG Then DebugPrint("Reply button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             moai.Set("txt_reply_to", "Text", selected_content)
             moai.Set("pv_main", "Active", "First")
         EndIf
-
+        Break
     Case "btn_boost":
         If #DEBUG Then DebugPrint("Boost button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             p_StatusAction(selected_id, "reblog")
         EndIf
-
+        Break
     Case "btn_favourite":
         If #DEBUG Then DebugPrint("Favourite button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             p_StatusAction(selected_id, "favourite")
         EndIf
-
+        Break
     Case "btn_bookmark":
         If #DEBUG Then DebugPrint("Bookmark button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             p_StatusAction(selected_id, "bookmark")
         EndIf
-    
+        Break
     Case "btn_more":
         If #DEBUG Then DebugPrint("More button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             ; TODO More using the selected_id
         EndIf
-
+        Break
     Case "lv_notifications":
         selected_content, selected_id, selected_type = moai.DoMethod("lv_notifications", "GetEntry", "Active")
         If #DEBUG Then DebugPrint("Notifications Listview selected item changed, id: " .. selected_id)
-
+        Break
     Case "lv_mentions":
         selected_content, selected_id, selected_type = moai.DoMethod("lv_mentions", "GetEntry", "Active")
         If #DEBUG Then DebugPrint("Mentions Listview selected item changed, id: " .. selected_id)
-
+        Break
     Case "btn_getnotifications":
         ; We can have either All or Mentions selected here, detect which one
         Local type
@@ -289,7 +289,7 @@ Function p_GUIEvent(id)
         DisableLineHook() ; Temporarily disable this, to increase performance
         p_GetContent(type)
         EnableLineHook() ; Enable it again after we are done
-
+        Break
     Case "btn_gettrending":
         ; Posts, Hashtags, News or For You
         Local type
@@ -309,87 +309,64 @@ Function p_GUIEvent(id)
         p_ClearListView(type)
         p_GetContent(type)
         EnableLineHook()
+        Break
 
-; TODO these should be refactored to avoid repeating the same code
     Case "btn_getlocal":
-        DisableLineHook()
-        p_GetContent("local")
-        EnableLineHook()
-
     Case "btn_getfederated":
-        DisableLineHook()
-        p_GetContent("federated")
-        EnableLineHook()
-
     Case "btn_getdms":
-        DisableLineHook()
-        p_GetContent("dm")
-        EnableLineHook()
-
     Case "btn_getfavourites":
-        DisableLineHook()
-        p_GetContent("favourites")
-        EnableLineHook()
-
     Case "btn_getbookmarks":
-        DisableLineHook()
-        p_GetContent("bookmarks")
-        EnableLineHook()
-
     Case "btn_getlists":
-        DisableLineHook()
-        p_GetContent("lists")
-        EnableLineHook()
-
     Case "btn_getfollowrequests":
         DisableLineHook()
-        p_GetContent("followrequests")
+        p_GetContent(UnrightStr(id, 7))
         EnableLineHook()
+        Break
 
     Case "btn_WelcomeDialogOK":
         moai.DoMethod("dlg_welcome", "EndModal", 1)
         p_OpenSettingsDialog()
-
+        Break
     Case "btn_SaveSettings":
         p_ParseSettings()
         p_SetServerLabel()
         moai.DoMethod("dlg_settings", "EndModal", 1)
-
+        Break
     Case "btn_CancelSettings":
         moai.DoMethod("dlg_settings", "EndModal", 0)
-
+        Break
     Case "btn_openlogin":
         p_ParseSettings()
         If token = Nil
             p_GetServerAuthorization()
         EndIf
         p_OpenLoginDialog()
-
+        Break
     Case "btn_LoginSaveCode":
         p_SaveLoginAuthCode()
         moai.DoMethod("dlg_login", "EndModal", 1)
         account = p_GetVerifyAccountCredentials()
         p_SetUsernameLabel()
         p_GetAccountAvatar(True)
-
+        Break
     Case "btn_Publish":
         Local status = moai.Get("txtedit", "Text")
         p_PublishStatus(status)
-
+        Break
     Case "btn_dlg_OK":
         moai.DoMethod("dlg_generic", "EndModal", 0)
-
+        Break
     Case "btn_LoginCancel":
         moai.DoMethod("dlg_login", "EndModal", 0)
-
-    Case "about":
+        Break
+    Case "mn_about":
 		moai.Request("Amidon", #ABOUTMSG, "OK")
-
-    Case "settings":
+        Break
+    Case "mn_settings":
         p_OpenSettingsDialog()
-
-    Case "quit":
+        Break
+    Case "mn_quit":
         p_QuitApp()
-
+        Break
 	EndSwitch
 EndFunction
