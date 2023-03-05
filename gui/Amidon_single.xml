@@ -60,20 +60,20 @@
                     <pageview id="pv_notifications">
                         <hgroup title="All">
                             <Listview id="lv_notifications" Alternate="True" HRules="True" notify="Active; DoubleClick">
-                                <column title="R" Checkbox="True" Hide="True"/>
-                                <column title="F" Checkbox="True" Hide="True"/>
-                                <column title="B" Checkbox="True" Hide="True"/>
                                 <column title="Content"/>
+                                <column title="R" Hide="True"/>
+                                <column title="F" Hide="True"/>
+                                <column title="B" Hide="True"/>
                                 <column title="id" hide="True"/>
                                 <column title="type" hide="True"/>
                             </Listview>
                         </hgroup>
                         <hgroup title="Mentions">
                             <Listview id="lv_mentions" Alternate="True" HRules="True" notify="Active; DoubleClick">
-                                <column title="R" Checkbox="True" Hide="True"/>
-                                <column title="F" Checkbox="True" Hide="True"/>
-                                <column title="B" Checkbox="True" Hide="True"/>
                                 <column title="Content"/>
+                                <column title="R" Hide="True"/>
+                                <column title="F" Hide="True"/>
+                                <column title="B" Hide="True"/>
                                 <column title="id" hide="True"/>
                                 <column title="type" hide="True"/>
                             </Listview>
@@ -93,9 +93,12 @@
                     <pageview id="pv_explore">
                         <hgroup title="Posts">
                             <Listview id="lv_posts" Alternate="True" HRules="True" notify="active">
-                                <column/>
-                                <column hide="True" Width="0"/>
-                                <column hide="True" Width="0"/>
+                                <column title="Content"/>
+                                <column title="R" Hide="True"/>
+                                <column title="F" Hide="True"/>
+                                <column title="B" Hide="True"/>
+                                <column title="id" hide="True"/>
+                                <column title="type" hide="True"/>
                             </Listview>
                         </hgroup>
                         <hgroup title="Hashtags">
@@ -119,45 +122,60 @@
                 <vgroup title="Local">
                     <button id="btn_getlocal" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_local" Alternate="True" HRules="True" notify="active">
-                        <column/>
-                        <column hide="True" Width="0"/>
-                        <column hide="True" Width="0"/>
+                        <column title="Content"/>
+                        <column title="R" Hide="True"/>
+                        <column title="F" Hide="True"/>
+                        <column title="B" Hide="True"/>
+                        <column title="id" hide="True"/>
+                        <column title="type" hide="True"/>
                     </Listview>
                 </vgroup>
 
                 <vgroup title="Federated">
                     <button id="btn_getfederated" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_federated" Alternate="True" HRules="True" notify="active">
-                        <column/>
-                        <column hide="True" Width="0"/>
-                        <column hide="True" Width="0"/>
+                        <column title="Content"/>
+                        <column title="R" Hide="True"/>
+                        <column title="F" Hide="True"/>
+                        <column title="B" Hide="True"/>
+                        <column title="id" hide="True"/>
+                        <column title="type" hide="True"/>
                     </Listview>
                 </vgroup>
 
                 <vgroup title="DMs">
                     <button id="btn_getdms" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_dm" Alternate="True" HRules="True" notify="active">
-                        <column/>
-                        <column hide="True" Width="0"/>
-                        <column hide="True" Width="0"/>
+                        <column title="Content"/>
+                        <column title="R" Hide="True"/>
+                        <column title="F" Hide="True"/>
+                        <column title="B" Hide="True"/>
+                        <column title="id" hide="True"/>
+                        <column title="type" hide="True"/>
                     </Listview>
                 </vgroup>
 
                 <vgroup title="Favourites">
                     <button id="btn_getfavourites" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_favourites" Alternate="True" HRules="True" notify="active">
-                        <column/>
-                        <column hide="True" Width="0"/>
-                        <column hide="True" Width="0"/>
+                        <column title="Content"/>
+                        <column title="R" Hide="True"/>
+                        <column title="F" Hide="True"/>
+                        <column title="B" Hide="True"/>
+                        <column title="id" hide="True"/>
+                        <column title="type" hide="True"/>
                     </Listview>
                 </vgroup>
 
                 <vgroup title="Bookmarks">
                     <button id="btn_getbookmarks" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_bookmarks" Alternate="True" HRules="True" notify="active">
-                        <column/>
-                        <column hide="True" Width="0"/>
-                        <column hide="True" Width="0"/>
+                        <column title="Content"/>
+                        <column title="R" Hide="True"/>
+                        <column title="F" Hide="True"/>
+                        <column title="B" Hide="True"/>
+                        <column title="id" hide="True"/>
+                        <column title="type" hide="True"/>
                     </Listview>
                 </vgroup>
 
