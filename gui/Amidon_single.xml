@@ -60,25 +60,30 @@
                     <pageview id="pv_notifications">
                         <hgroup title="All">
                             <Listview id="lv_notifications" Alternate="True" HRules="True" notify="Active; DoubleClick">
-                                <column/>
-                                <column hide="True" Width="0"/>
-                                <column hide="True" Width="0"/>
+                                <column title="R" Checkbox="True" Hide="True"/>
+                                <column title="F" Checkbox="True" Hide="True"/>
+                                <column title="B" Checkbox="True" Hide="True"/>
+                                <column title="Content"/>
+                                <column title="id" hide="True"/>
+                                <column title="type" hide="True"/>
                             </Listview>
                         </hgroup>
                         <hgroup title="Mentions">
                             <Listview id="lv_mentions" Alternate="True" HRules="True" notify="Active; DoubleClick">
-                                <column/>
-                                <column hide="True" Width="0"/>
-                                <column hide="True" Width="0"/>
+                                <column title="R" Checkbox="True" Hide="True"/>
+                                <column title="F" Checkbox="True" Hide="True"/>
+                                <column title="B" Checkbox="True" Hide="True"/>
+                                <column title="Content"/>
+                                <column title="id" hide="True"/>
+                                <column title="type" hide="True"/>
                             </Listview>
                         </hgroup>
                     </pageview>
                     <hgroup>
                         <button id="btn_reply" icon="6" tooltip="Reply"/>
-                        <button id="btn_boost" icon="7" tooltip="Boost"/>
-                        <button id="btn_favourite" icon="8" tooltip="Favorite"/>
-                        <button id="btn_bookmark" icon="9" tooltip="Bookmark"/>
-                        <button id="btn_more" tooltip="More...">...</button>
+                        <button id="btn_boost" icon="7" tooltip="Boost" Toggle="True"/>
+                        <button id="btn_favourite" icon="8" tooltip="Favorite" Toggle="True"/>
+                        <button id="btn_bookmark" icon="9" tooltip="Bookmark" Toggle="True"/>
                         <rectangle/>
                     </hgroup>
                 </vgroup>

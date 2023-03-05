@@ -96,6 +96,9 @@ Global last_request_id = Nil
 Global selected_id = Nil
 Global selected_content = Nil
 Global selected_type = Nil
+Global selected_reblogged = Nil
+Global selected_favourite = Nil
+Global selected_bookmark = Nil
 
 ; Local variables
 Local gui_file = 2 ; Default to the simple GUI
