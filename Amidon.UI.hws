@@ -39,6 +39,7 @@ Function p_OpenHtmlView(content_html)
 
     If #DEBUG Then DebugPrint("Opening HTMLview window with content: " .. content_html)
     moai.Set("htmlview_content", "Contents", content_html)
+    p_UpdateActionButton2State()
     moai.DoMethod("dlg_htmlview", "ShowModal")
 EndFunction
 
@@ -61,29 +62,29 @@ Function p_WriteListView(index, item, type)
 
             Switch item["type"]
             Case "mention":
-                content = content .. " mentioned you" .. ":" .. item["status"]["content"]
-                moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], "status")
+                content = content .. " mentioned you" .. ": " .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["status"]["reblogged"], item["status"]["favourited"], item["status"]["bookmarked"], base:StripHTML(content), item["status"]["id"], "status")
             Case "status":
-                content = content ..  " posted a new status" .. ":" .. item["status"]["content"]
-                moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], "status")
+                content = content .. " posted a new status" .. ": " .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["status"]["reblogged"], item["status"]["favourited"], item["status"]["bookmarked"], base:StripHTML(content), item["status"]["id"], "status")
             Case "reblog":
-                content = content ..  " boosted your post" .. ":" .. item["status"]["content"]
-                moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], "status")
+                content = content .. " boosted your post" .. ": " .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["status"]["reblogged"], item["status"]["favourited"], item["status"]["bookmarked"], base:StripHTML(content), item["status"]["id"], "status")
             Case "follow":
-                content = content ..  " followed you" .. ":" ..  item["account"]["acct"]
-                moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["id"], item["type"])
+                content = content .. " followed you" .. ": " ..  item["account"]["acct"]
+                moai.DoMethod("lv_notifications", "Insert", "Top",  Nil, Nil, Nil, base:StripHTML(content),item["id"], item["type"])
             Case "follow_request":
-                content = content ..  " requested to follow you" .. ":" .. "\n"
-                moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["id"], item["type"])
+                content = content .. " requested to follow you" .. ": "
+                moai.DoMethod("lv_notifications", "Insert", "Top", Nil, Nil, Nil, base:StripHTML(content), item["id"], item["type"])
             Case "favourite":
-                content = content ..  " favourited your post" .. ":" .. item["status"]["content"]
-                moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], "status")
+                content = content .. " favourited your post" .. ": " .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", item["status"]["reblogged"], item["status"]["favourited"], item["status"]["bookmarked"], base:StripHTML(content), item["status"]["id"], "status")
             Case "poll":
-                content = content ..  " your poll has ended" .. ":" .. item["status"]["content"]
-                moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], item["type"])
+                content = content .. " your poll has ended" .. ": " .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", Nil, Nil, Nil, base:StripHTML(content), item["status"]["id"], item["type"])
             Case "update":
-                content = content ..  " your post has been edited" .. ":" .. item["status"]["content"]
-                moai.DoMethod("lv_notifications", "Insert", "Top", base:StripHTML(content), item["status"]["id"], item["type"])
+                content = content .. " your post has been edited" .. ": " .. item["status"]["content"]
+                moai.DoMethod("lv_notifications", "Insert", "Top", Nil, Nil, Nil, base:StripHTML(content), item["status"]["id"], item["type"])
             EndSwitch
         EndIf
 
@@ -92,12 +93,12 @@ Function p_WriteListView(index, item, type)
         If last_mention_id <> item["id"]
             last_mention_id = item["id"]
 
-            Local content = item["account"]["display_name"] .. ":" .. item["status"]["content"]
-            moai.DoMethod("lv_mentions", "Insert", "Top", base:StripHTML(content), item["status"]["id"], "status")
+            Local content = item["account"]["display_name"] .. ": " .. item["status"]["content"]
+            moai.DoMethod("lv_mentions", "Insert", "Top", item["status"]["reblogged"], item["status"]["favourited"], item["status"]["bookmarked"], base:StripHTML(content), item["status"]["id"], "status")
         EndIf
 
     Case "posts":
-        Local content = item["account"]["display_name"] .. ":" .. item["content"]
+        Local content = item["account"]["display_name"] .. ": " .. item["content"]
         moai.DoMethod("lv_posts", "Insert", "Top", base:StripHTML(content), item["id"], "status")
 
     Case "hashtags":
@@ -116,7 +117,7 @@ Function p_WriteListView(index, item, type)
         If last_local_timeline_id <> item["id"]
             last_local_timeline_id = item["id"]
 
-            Local content = item["account"]["display_name"] .. ":" .. item["content"]
+            Local content = item["account"]["display_name"] .. ": " .. item["content"]
             moai.DoMethod("lv_local", "Insert", "Top", base:StripHTML(content), item["id"], "status")
         EndIf
 
@@ -124,7 +125,7 @@ Function p_WriteListView(index, item, type)
         If last_federated_timeline_id <> item["id"]
             last_federated_timeline_id = item["id"]
 
-            Local content = item["account"]["display_name"] .. ":" .. item["content"]
+            Local content = item["account"]["display_name"] .. ": " .. item["content"]
             moai.DoMethod("lv_federated", "Insert", "Top", base:StripHTML(content), item["id"], "status")
         EndIf
 
@@ -133,7 +134,7 @@ Function p_WriteListView(index, item, type)
             last_dm_id = item["id"]
 
             If item["last_status"] <> Nil
-                Local content = item["last_status"]["account"]["display_name"] .. ":" .. item["last_status"]["content"]
+                Local content = item["last_status"]["account"]["display_name"] .. ": " .. item["last_status"]["content"]
                 moai.DoMethod("lv_dm", "Insert", "Top", base:StripHTML(content), item["id"], "status")
             EndIf
         EndIf
@@ -142,7 +143,7 @@ Function p_WriteListView(index, item, type)
         If last_favourite_id <> item["id"]
             last_favourite_id = item["id"]
 
-            Local content = item["account"]["display_name"] .. ":" .. item["content"]
+            Local content = item["account"]["display_name"] .. ": " .. item["content"]
             moai.DoMethod("lv_favourites", "Insert", "Top", base:StripHTML(content), item["id"], "status")
         EndIf
 
@@ -150,7 +151,7 @@ Function p_WriteListView(index, item, type)
         If last_bookmark_id <> item["id"]
             last_bookmark_id = item["id"]
 
-            Local content = item["account"]["display_name"] .. ":" .. item["content"]
+            Local content = item["account"]["display_name"] .. ": " .. item["content"]
             moai.DoMethod("lv_bookmarks", "Insert", "Top", base:StripHTML(content), item["id"], "status")
         EndIf
 
@@ -194,21 +195,86 @@ Function p_ClearReplyTo()
     selected_content = Nil
 EndFunction
 
+Function p_GetActiveListview()
+    Switch moai.Get("pv_main", "Active")
+
+    Case 0: ;Publish
+    Case 1: ;Notifications
+        If moai.Get("pv_notifications", "Active") = 0 ; All
+            Return("lv_notifications")
+        Else ; Mentions
+            Return("lv_mentions")
+        EndIf
+    Case 2: ;Explore
+    Case 3: ;Local
+    Case 4: ;Federated
+    Case 5: ;DMs
+    Case 6: ;Favourites
+    Case 7: ;Bookmarks
+    Case 8: ;Lists
+    Case 9: ;Follow Requests
+    EndSwitch
+EndFunction
+
 /*
-** Write item to HTMLView
-**
-** Unfortunately, this has problems with OS3's HTMLview MUI class currently:
-** - No more than 6 instances of the class in the app, otherwise it crashes on startup
-** - HTMLview doesn't work on OS3 with MUI versions higher than 3.9
+* Update the main Action buttons state (Toggle Pressed/Not pressed)
 */
-;Function p_WriteHtmlView(index, item)
-;    ; If the new content is different than the last one we got, insert it at the top
-;    If last_content <> item["content"]
-;        last_content = "<b>" .. item["account"]["username"] .. "</b> </br>" .. item["account"]["acct"] .. "<p>".. item["content"] .. "<hr/>"
-;        Local content = last_content .. moai.Get("html_notifications", "contents")
-;        moai.Set("html_notifications", "contents", "<HTML><BODY>" .. content .. "</BODY></HTML>")
-;    EndIf
-;EndFunction
+Function p_UpdateActionButtonState()
+    ; Disable the event handler temporarily, otherwise it will trigger an event for the button
+    InstallEventHandler({RapaGUI = 0})
+    If #DEBUG Then DebugPrint("selected_reblogged: " .. selected_reblogged)
+    If selected_reblogged = "1" 
+        moai.Set("btn_boost", "Selected", True) 
+    Else 
+        moai.Set("btn_boost", "Selected", False)
+    EndIf
+
+    If #DEBUG Then DebugPrint("selected_favourite: " .. selected_favourite)
+    If selected_favourite = "1" 
+        moai.Set("btn_favourite", "Selected", True) 
+    Else 
+        moai.Set("btn_favourite", "Selected", False)
+    EndIf
+
+    If #DEBUG Then DebugPrint("selected_bookmark: " .. selected_bookmark)
+    If selected_bookmark = "1"
+        moai.Set("btn_bookmark", "Selected", True) 
+    Else 
+        moai.Set("btn_bookmark", "Selected", False)
+    EndIf
+    ; Re-enable the event handler
+    InstallEventHandler({RapaGUI = p_EventFunc})
+EndFunction
+
+/*
+* Update the HTMLview Action buttons state (Toggle Pressed/Not pressed)
+*/
+Function p_UpdateActionButton2State()
+    ; Disable the event handler temporarily, otherwise it will trigger an event for the button
+    InstallEventHandler({RapaGUI = 0})
+    If #DEBUG Then DebugPrint("selected_reblogged: " .. selected_reblogged)
+    If selected_reblogged = "1" 
+        moai.Set("btn_boost2", "Selected", True) 
+    Else 
+        moai.Set("btn_boost2", "Selected", False)
+    EndIf
+
+    If #DEBUG Then DebugPrint("selected_favourite: " .. selected_favourite)
+    If selected_favourite = "1" 
+        moai.Set("btn_favourite2", "Selected", True) 
+    Else 
+        moai.Set("btn_favourite2", "Selected", False)
+    EndIf
+
+    If #DEBUG Then DebugPrint("selected_bookmark: " .. selected_bookmark)
+    If selected_bookmark = "1"
+        moai.Set("btn_bookmark2", "Selected", True) 
+    Else 
+        moai.Set("btn_bookmark2", "Selected", False)
+    EndIf
+    ; Re-enable the event handler
+    InstallEventHandler({RapaGUI = p_EventFunc})
+EndFunction
 
 /*
 ** Event handlers for the GUI
@@ -238,58 +304,84 @@ Function p_GUIEvent(id)
         Local length = StrLen(moai.Get("txtedit", "Text"))
         moai.Set("lbl_chars", "Text", 500 - length)
         Break
+
     Case "btn_reply":
+    Case "btn_reply2":
         If #DEBUG Then DebugPrint("Reply button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             moai.Set("txt_reply_to", "Text", selected_content)
             moai.Set("pv_main", "Active", "First")
         EndIf
         Break
+
     Case "btn_boost":
+    Case "btn_boost2":
         If #DEBUG Then DebugPrint("Boost button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
-            p_StatusAction(selected_id, "reblog")
+            Local lv = p_GetActiveListview()
+            Local row = moai.Get(lv, "Active")
+            Local action
+            If selected_reblogged = "On"
+                action = "unreblog"
+                moai.DoMethod(lv, "SetState", row, 0, False)
+            Else
+                action = "reblog"
+                moai.DoMethod(lv, "SetState", row, 0, True)
+            EndIf
+            p_StatusAction(selected_id, action)
         EndIf
         Break
+
     Case "btn_favourite":
+    Case "btn_favourite2":
         If #DEBUG Then DebugPrint("Favourite button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
-            p_StatusAction(selected_id, "favourite")
+            Local lv = p_GetActiveListview()
+            Local row = moai.Get(lv, "Active")
+            Local action
+            If selected_favourite = "On"
+                action = "unfavourite"
+                moai.DoMethod(lv, "SetState", row, 1, False)
+            Else
+                action = "favourite"
+                moai.DoMethod(lv, "SetState", row, 1, True)
+            EndIf
+            p_StatusAction(selected_id, action)
         EndIf
         Break
+
     Case "btn_bookmark":
+    Case "btn_bookmark2":
         If #DEBUG Then DebugPrint("Bookmark button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
-            p_StatusAction(selected_id, "bookmark")
+            Local lv = p_GetActiveListview()
+            Local row = moai.Get(lv, "Active")
+            Local action
+            If selected_bookmark = "On"
+                action = "unbookmark"
+                moai.DoMethod(lv, "SetState", row, 2, False)
+            Else
+                action = "bookmark"
+                moai.DoMethod(lv, "SetState", row, 2, True)
+            EndIf
+             p_StatusAction(selected_id, action)
         EndIf
         Break
-    Case "btn_more":
-        If #DEBUG Then DebugPrint("More button pressed, selected Id was ".. selected_id)
-        If ToNumber(selected_id) > 0
-            ; TODO More using the selected_id
-        EndIf
-        Break
+
     Case "lv_notifications":
-        selected_content, selected_id, selected_type = moai.DoMethod("lv_notifications", "GetEntry", "Active")
+    Case "lv_mentions":
+        selected_reblogged, selected_favourite, selected_bookmark, selected_content, selected_id, selected_type = moai.DoMethod(id, "GetEntry", "Active")
+        p_UpdateActionButtonState()
         If #DEBUG Then DebugPrint("Notifications Listview selected item changed, id: " .. selected_id)
         Break
-    Case "lv_mentions":
-        selected_content, selected_id, selected_type = moai.DoMethod("lv_mentions", "GetEntry", "Active")
-        If #DEBUG Then DebugPrint("Mentions Listview selected item changed, id: " .. selected_id)
-        Break
+    
     Case "btn_getnotifications":
-        ; We can have either All or Mentions selected here, detect which one
-        Local type
-        If moai.Get("pv_notifications", "Active") = 0
-            type = "notifications"
-        Else
-            type = "mentions"
-        EndIf
-        
         DisableLineHook() ; Temporarily disable this, to increase performance
-        p_GetContent(type)
+        p_GetContent("notifications")
+        p_GetContent("mentions")
         EnableLineHook() ; Enable it again after we are done
         Break
+
     Case "btn_gettrending":
         ; Posts, Hashtags, News or For You
         Local type
