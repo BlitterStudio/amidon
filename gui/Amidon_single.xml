@@ -92,7 +92,7 @@
                     <button id="btn_gettrending" tooltip="Refresh">Refresh</button>
                     <pageview id="pv_explore">
                         <hgroup title="Posts">
-                            <Listview id="lv_posts" Alternate="True" HRules="True" notify="active">
+                            <Listview id="lv_posts" Alternate="True" HRules="True" notify="Active; DoubleClick">
                                 <column title="Content"/>
                                 <column title="R" Hide="True"/>
                                 <column title="F" Hide="True"/>
@@ -130,7 +130,7 @@
                     <button id="btn_gettimeline" tooltip="Refresh">Refresh</button>
                     <pageview id="pv_timeline">
                         <hgroup title="Local">
-                            <Listview id="lv_local" Alternate="True" HRules="True" notify="active">
+                            <Listview id="lv_local" Alternate="True" HRules="True" notify="Active; DoubleClick">
                                 <column title="Content"/>
                                 <column title="R" Hide="True"/>
                                 <column title="F" Hide="True"/>
@@ -140,7 +140,7 @@
                             </Listview>
                         </hgroup>
                         <hgroup title="Federated">
-                            <Listview id="lv_federated" Alternate="True" HRules="True" notify="active">
+                            <Listview id="lv_federated" Alternate="True" HRules="True" notify="Active; DoubleClick">
                                 <column title="Content"/>
                                 <column title="R" Hide="True"/>
                                 <column title="F" Hide="True"/>
@@ -161,7 +161,7 @@
 
                 <vgroup title="DMs">
                     <button id="btn_getdm" tooltip="Refresh">Refresh</button>
-                    <Listview id="lv_dm" Alternate="True" HRules="True" notify="active">
+                    <Listview id="lv_dm" Alternate="True" HRules="True" notify="Active">
                         <column title="DM"/>
                         <column title="id" hide="True"/>
                         <column title="type" hide="True"/>
@@ -171,7 +171,7 @@
 
                 <vgroup title="Favourites">
                     <button id="btn_getfavourites" tooltip="Refresh">Refresh</button>
-                    <Listview id="lv_favourites" Alternate="True" HRules="True" notify="active">
+                    <Listview id="lv_favourites" Alternate="True" HRules="True" notify="Active; DoubleClick">
                         <column title="Content"/>
                         <column title="R" Hide="True"/>
                         <column title="F" Hide="True"/>
@@ -190,7 +190,7 @@
 
                 <vgroup title="Bookmarks">
                     <button id="btn_getbookmarks" tooltip="Refresh">Refresh</button>
-                    <Listview id="lv_bookmarks" Alternate="True" HRules="True" notify="active">
+                    <Listview id="lv_bookmarks" Alternate="True" HRules="True" notify="Active; DoubleClick">
                         <column title="Content"/>
                         <column title="R" Hide="True"/>
                         <column title="F" Hide="True"/>

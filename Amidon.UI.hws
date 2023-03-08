@@ -134,7 +134,7 @@ Function p_WriteListView(index, item, type)
 
             If item["last_status"] <> Nil
                 Local content = item["last_status"]["account"]["display_name"] .. ": " .. item["last_status"]["content"]
-                moai.DoMethod("lv_dm", "Insert", "Top", base:StripHTML(content), item["id"], "status")
+                moai.DoMethod("lv_dm", "Insert", "Top", base:StripHTML(content), item["id"], "conversation")
             EndIf
         EndIf
 
@@ -318,6 +318,12 @@ Function p_DoubleClickEvent(id)
 
     Case "lv_notifications":
     Case "lv_mentions":
+    Case "lv_posts":
+    Case "lv_local":
+    Case "lv_federated":
+    Case "lv_dm":
+    Case "lv_favourites":
+    Case "lv_bookmarks": 
         If #DEBUG Then DebugPrint("Double click on Notifications listview triggered")
         If ToNumber(selected_id) > 0
             Local status = p_GetSingleContent(selected_id, selected_type)
