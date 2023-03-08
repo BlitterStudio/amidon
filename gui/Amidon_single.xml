@@ -80,10 +80,10 @@
                         </hgroup>
                     </pageview>
                     <hgroup>
-                        <button id="btn_reply" icon="6" tooltip="Reply"/>
-                        <button id="btn_boost" icon="7" tooltip="Boost" Toggle="True"/>
-                        <button id="btn_favourite" icon="8" tooltip="Favorite" Toggle="True"/>
-                        <button id="btn_bookmark" icon="9" tooltip="Bookmark" Toggle="True"/>
+                        <button id="btn_notifications_reply" icon="6" tooltip="Reply"/>
+                        <button id="btn_notifications_boost" icon="7" tooltip="Boost" Toggle="True"/>
+                        <button id="btn_notifications_favourite" icon="8" tooltip="Favorite" Toggle="True"/>
+                        <button id="btn_notifications_bookmark" icon="9" tooltip="Bookmark" Toggle="True"/>
                         <rectangle/>
                     </hgroup>
                 </vgroup>
@@ -117,42 +117,56 @@
                             </Listview>
                         </hgroup>
                     </pageview>
+                    <hgroup>
+                        <button id="btn_explore_reply" icon="6" tooltip="Reply"/>
+                        <button id="btn_explore_boost" icon="7" tooltip="Boost" Toggle="True"/>
+                        <button id="btn_explore_favourite" icon="8" tooltip="Favorite" Toggle="True"/>
+                        <button id="btn_explore_bookmark" icon="9" tooltip="Bookmark" Toggle="True"/>
+                        <rectangle/>
+                    </hgroup>
                 </vgroup>
 
-                <vgroup title="Local">
-                    <button id="btn_getlocal" tooltip="Refresh">Refresh</button>
-                    <Listview id="lv_local" Alternate="True" HRules="True" notify="active">
-                        <column title="Content"/>
-                        <column title="R" Hide="True"/>
-                        <column title="F" Hide="True"/>
-                        <column title="B" Hide="True"/>
-                        <column title="id" hide="True"/>
-                        <column title="type" hide="True"/>
-                    </Listview>
-                </vgroup>
-
-                <vgroup title="Federated">
-                    <button id="btn_getfederated" tooltip="Refresh">Refresh</button>
-                    <Listview id="lv_federated" Alternate="True" HRules="True" notify="active">
-                        <column title="Content"/>
-                        <column title="R" Hide="True"/>
-                        <column title="F" Hide="True"/>
-                        <column title="B" Hide="True"/>
-                        <column title="id" hide="True"/>
-                        <column title="type" hide="True"/>
-                    </Listview>
+                <vgroup title="Timeline">
+                    <button id="btn_gettimeline" tooltip="Refresh">Refresh</button>
+                    <pageview id="pv_timeline">
+                        <hgroup title="Local">
+                            <Listview id="lv_local" Alternate="True" HRules="True" notify="active">
+                                <column title="Content"/>
+                                <column title="R" Hide="True"/>
+                                <column title="F" Hide="True"/>
+                                <column title="B" Hide="True"/>
+                                <column title="id" hide="True"/>
+                                <column title="type" hide="True"/>
+                            </Listview>
+                        </hgroup>
+                        <hgroup title="Federated">
+                            <Listview id="lv_federated" Alternate="True" HRules="True" notify="active">
+                                <column title="Content"/>
+                                <column title="R" Hide="True"/>
+                                <column title="F" Hide="True"/>
+                                <column title="B" Hide="True"/>
+                                <column title="id" hide="True"/>
+                                <column title="type" hide="True"/>
+                            </Listview>
+                        </hgroup>
+                    </pageview>
+                    <hgroup>
+                        <button id="btn_timeline_reply" icon="6" tooltip="Reply"/>
+                        <button id="btn_timeline_boost" icon="7" tooltip="Boost" Toggle="True"/>
+                        <button id="btn_timeline_favourite" icon="8" tooltip="Favorite" Toggle="True"/>
+                        <button id="btn_timeline_bookmark" icon="9" tooltip="Bookmark" Toggle="True"/>
+                        <rectangle/>
+                    </hgroup>
                 </vgroup>
 
                 <vgroup title="DMs">
-                    <button id="btn_getdms" tooltip="Refresh">Refresh</button>
+                    <button id="btn_getdm" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_dm" Alternate="True" HRules="True" notify="active">
-                        <column title="Content"/>
-                        <column title="R" Hide="True"/>
-                        <column title="F" Hide="True"/>
-                        <column title="B" Hide="True"/>
+                        <column title="DM"/>
                         <column title="id" hide="True"/>
                         <column title="type" hide="True"/>
                     </Listview>
+                    <button id="btn_dm_reply" icon="6" tooltip="Reply"/>
                 </vgroup>
 
                 <vgroup title="Favourites">
@@ -165,6 +179,13 @@
                         <column title="id" hide="True"/>
                         <column title="type" hide="True"/>
                     </Listview>
+                    <hgroup>
+                        <button id="btn_favourites_reply" icon="6" tooltip="Reply"/>
+                        <button id="btn_favourites_boost" icon="7" tooltip="Boost" Toggle="True"/>
+                        <button id="btn_favourites_favourite" icon="8" tooltip="Favorite" Toggle="True"/>
+                        <button id="btn_favourites_bookmark" icon="9" tooltip="Bookmark" Toggle="True"/>
+                        <rectangle/>
+                    </hgroup>
                 </vgroup>
 
                 <vgroup title="Bookmarks">
@@ -177,23 +198,30 @@
                         <column title="id" hide="True"/>
                         <column title="type" hide="True"/>
                     </Listview>
+                    <hgroup>
+                        <button id="btn_bookmarks_reply" icon="6" tooltip="Reply"/>
+                        <button id="btn_bookmarks_boost" icon="7" tooltip="Boost" Toggle="True"/>
+                        <button id="btn_bookmarks_favourite" icon="8" tooltip="Favorite" Toggle="True"/>
+                        <button id="btn_bookmarks_bookmark" icon="9" tooltip="Bookmark" Toggle="True"/>
+                        <rectangle/>
+                    </hgroup>
                 </vgroup>
 
                 <vgroup title="Lists">
                     <button id="btn_getlists" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_lists" Alternate="True" HRules="True" notify="active">
-                        <column/>
-                        <column hide="True" Width="0"/>
-                        <column hide="True" Width="0"/>
+                        <column title="Lists"/>
+                        <column title="id" hide="True"/>
+                        <column title="type" hide="True"/>
                     </Listview>
                 </vgroup>
 
                 <vgroup title="Requests">
                     <button id="btn_getfollowrequests" tooltip="Refresh">Refresh</button>
                     <Listview id="lv_followrequests" Alternate="True" HRules="True" notify="active">
-                        <column/>
-                        <column hide="True" Width="0"/>
-                        <column hide="True" Width="0"/>
+                        <column title="Follow requests"/>
+                        <column title="id" hide="True"/>
+                        <column title="type" hide="True"/>
                     </Listview>
                 </vgroup>
 

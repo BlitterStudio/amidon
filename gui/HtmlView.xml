@@ -2,10 +2,10 @@
     <vgroup>
         <htmlview id="htmlview_content"/>
         <hgroup>
-            <button id="btn_reply2" icon="6" tooltip="Reply"/>
-            <button id="btn_boost2" icon="7" tooltip="Boost" Toggle="True"/>
-            <button id="btn_favourite2" icon="8" tooltip="Favorite" Toggle="True"/>
-            <button id="btn_bookmark2" icon="9" tooltip="Bookmark" Toggle="True"/>
+            <button id="btn_htmlview_reply" icon="6" tooltip="Reply"/>
+            <button id="btn_htmlview_boost" icon="7" tooltip="Boost" Toggle="True"/>
+            <button id="btn_htmlview_favourite" icon="8" tooltip="Favorite" Toggle="True"/>
+            <button id="btn_htmlview_bookmark" icon="9" tooltip="Bookmark" Toggle="True"/>
         </hgroup>
     </vgroup>
 </dialog>

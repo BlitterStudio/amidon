@@ -21,17 +21,6 @@
             </hgroup>
         </vgroup>
 
-        <vgroup Frame="True" FrameTitle="GUI options">
-            <radio id="rdo_gui" title="Layout">
-                <item>Simple GUI (single-column)</item>
-                <item>Advanced GUI (multi-column)</item>
-            </radio>
-            <Text>
-                You will have to restart Amidon for this change to\n
-                take effect!
-            </Text>
-        </vgroup>
-
         <hgroup>
             <button id="btn_SaveSettings">Save settings</button>
             <button id="btn_CancelSettings">Cancel</button>

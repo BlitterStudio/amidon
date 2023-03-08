@@ -23,7 +23,6 @@ EndFunction
 Function p_SetDefaultSettings()
     ; Global application settings
     settings = {
-		gui_mode = 0,
 		server = ""
 	}
 EndFunction
@@ -31,7 +30,6 @@ EndFunction
 ; Parse settings from the GUI dialog
 Function p_ParseSettings()
     settings.server = moai.Get("txt_server", "Text")
-    settings.gui_mode = moai.Get("rdo_gui", "Active")
 EndFunction
 
 ; Ensure server setting doesn't start with HTTP/HTTPS (we add that ourselves)

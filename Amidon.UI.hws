@@ -20,7 +20,6 @@ Function p_OpenSettingsDialog()
     While Not Eof(settings_dialog_file) Do settings_dialog = settings_dialog .. ReadLine(settings_dialog_file)
     moai.CreateDialog(settings_dialog)
     moai.Set("txt_server", "Text", settings.server)
-    moai.Set("rdo_gui", "Active", settings.gui_mode)
     Local result = moai.DoMethod("dlg_settings", "ShowModal")
     If result = 1 Then p_SaveSettings()
 EndFunction
@@ -159,7 +158,7 @@ Function p_WriteListView(index, item, type)
         If last_list_id <> item["id"]
             last_list_id = item["id"]
 
-            moai.DoMethod("lv_lists", "Insert", "Top", item["title"], item["id"])
+            moai.DoMethod("lv_lists", "Insert", "Top", item["title"], item["id"], "list")
         EndIf
 
     Case "followrequests":
@@ -206,13 +205,32 @@ Function p_GetActiveListview()
             Return("lv_mentions")
         EndIf
     Case 2: ;Explore
-    Case 3: ;Local
-    Case 4: ;Federated
-    Case 5: ;DMs
-    Case 6: ;Favourites
-    Case 7: ;Bookmarks
-    Case 8: ;Lists
-    Case 9: ;Follow Requests
+        Switch moai.Get("pv_explore", "Active") 
+        Case 0: ; Posts
+            Return("lv_posts")
+        Case 1: ; Hashtags
+            Return("lv_hashtags")
+        Case 2: ; News
+            Return("lv_news")
+        Case 3: ; For you
+            Return("lv_foryou")
+        EndSwitch        
+    Case 3: ;Timeline
+        If moai.Get("pv_timeline", "Active") = 0 ; Local
+            Return("lv_local")
+        Else ; Federated
+            Return("lv_federated")
+        EndIf
+    Case 4: ;DMs
+        Return("lv_dm")
+    Case 5: ;Favourites
+        Return("lv_favourites")
+    Case 6: ;Bookmarks
+        Return("lv_bookmarks")
+    Case 7: ;Lists
+        Return("lv_lists")
+    Case 8: ;Follow Requests
+        Return("lv_followrequests")
     EndSwitch
 EndFunction
 
@@ -222,25 +240,41 @@ EndFunction
 Function p_UpdateActionButtonState()
     ; Disable the event handler temporarily, otherwise it will trigger an event for the button
     InstallEventHandler({RapaGUI = 0})
+
+    Local btn_boost
+    Local btn_favourite
+    Local btn_bookmark
+    Local active_listview = p_GetActiveListview()
+    active_listview = UnrightStr(active_listview, 3)
+
+    ; Special cases first
+    If active_listview = "mentions" Then active_listview = "notifications" ; Two tabs in the same pageview
+    If active_listview = "posts" Then active_listview = "explore"
+    If active_listview = "local" Or active_listview = "federated" Then active_listview = "timeline" ; Two tabs in the same pageview
+    
+    btn_boost = "btn_" .. active_listview .. "_boost"
+    btn_favourite = "btn_" .. active_listview .. "_favourite"
+    btn_bookmark = "btn_" .. active_listview .. "_bookmark"
+
     If #DEBUG Then DebugPrint("selected_reblogged: " .. selected_reblogged)
     If selected_reblogged = "1" Or selected_reblogged = "On"
-        moai.Set("btn_boost", "Selected", True) 
+        moai.Set(btn_boost, "Selected", True) 
     Else 
-        moai.Set("btn_boost", "Selected", False)
+        moai.Set(btn_boost, "Selected", False)
     EndIf
 
     If #DEBUG Then DebugPrint("selected_favourite: " .. selected_favourite)
     If selected_favourite = "1" Or selected_favourite = "On"
-        moai.Set("btn_favourite", "Selected", True) 
+        moai.Set(btn_favourite, "Selected", True) 
     Else 
-        moai.Set("btn_favourite", "Selected", False)
+        moai.Set(btn_favourite, "Selected", False)
     EndIf
 
     If #DEBUG Then DebugPrint("selected_bookmark: " .. selected_bookmark)
     If selected_bookmark = "1" Or selected_bookmark = "On"
-        moai.Set("btn_bookmark", "Selected", True) 
+        moai.Set(btn_bookmark, "Selected", True) 
     Else 
-        moai.Set("btn_bookmark", "Selected", False)
+        moai.Set(btn_bookmark, "Selected", False)
     EndIf
     ; Re-enable the event handler
     InstallEventHandler({RapaGUI = p_EventFunc})
@@ -254,23 +288,23 @@ Function p_UpdateActionButton2State()
     InstallEventHandler({RapaGUI = 0})
     If #DEBUG Then DebugPrint("selected_reblogged: " .. selected_reblogged)
     If selected_reblogged = "1" Or selected_reblogged = "On"
-        moai.Set("btn_boost2", "Selected", True) 
+        moai.Set("btn_htmlview_boost", "Selected", True) 
     Else 
-        moai.Set("btn_boost2", "Selected", False)
+        moai.Set("btn_htmlview_boost", "Selected", False)
     EndIf
 
     If #DEBUG Then DebugPrint("selected_favourite: " .. selected_favourite)
     If selected_favourite = "1" Or selected_favourite = "On" 
-        moai.Set("btn_favourite2", "Selected", True) 
+        moai.Set("btn_htmlview_favourite", "Selected", True) 
     Else 
-        moai.Set("btn_favourite2", "Selected", False)
+        moai.Set("btn_htmlview_favourite", "Selected", False)
     EndIf
 
     If #DEBUG Then DebugPrint("selected_bookmark: " .. selected_bookmark)
     If selected_bookmark = "1" Or selected_bookmark = "On"
-        moai.Set("btn_bookmark2", "Selected", True) 
+        moai.Set("btn_htmlview_bookmark", "Selected", True) 
     Else 
-        moai.Set("btn_bookmark2", "Selected", False)
+        moai.Set("btn_htmlview_bookmark", "Selected", False)
     EndIf
     ; Re-enable the event handler
     InstallEventHandler({RapaGUI = p_EventFunc})
@@ -305,8 +339,13 @@ Function p_GUIEvent(id)
         moai.Set("lbl_chars", "Text", 500 - length)
         Break
 
-    Case "btn_reply":
-    Case "btn_reply2":
+    Case "btn_notifications_reply":
+    Case "btn_htmlview_reply":
+    Case "btn_explore_reply":
+    Case "btn_timeline_reply":
+    Case "btn_favourites_reply":
+    Case "btn_dm_reply":
+    Case "btn_bookmarks_reply":
         If #DEBUG Then DebugPrint("Reply button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             moai.Set("txt_reply_to", "Text", selected_content)
@@ -314,8 +353,12 @@ Function p_GUIEvent(id)
         EndIf
         Break
 
-    Case "btn_boost":
-    Case "btn_boost2":
+    Case "btn_notifications_boost":
+    Case "btn_htmlview_boost":
+    Case "btn_explore_boost":
+    Case "btn_timeline_boost":
+    Case "btn_favourites_boost":
+    Case "btn_bookmarks_boost":
         If #DEBUG Then DebugPrint("Boost button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             Local lv = p_GetActiveListview()
@@ -332,8 +375,12 @@ Function p_GUIEvent(id)
         EndIf
         Break
 
-    Case "btn_favourite":
-    Case "btn_favourite2":
+    Case "btn_notifications_favourite":
+    Case "btn_htmlview_favourite":
+    Case "btn_explore_favourite":
+    Case "btn_timeline_favourite":
+    Case "btn_favourites_favourite":
+    Case "btn_bookmarks_favourite":
         If #DEBUG Then DebugPrint("Favourite button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             Local lv = p_GetActiveListview()
@@ -350,8 +397,12 @@ Function p_GUIEvent(id)
         EndIf
         Break
 
-    Case "btn_bookmark":
-    Case "btn_bookmark2":
+    Case "btn_notifications_bookmark":
+    Case "btn_htmlview_bookmark":
+    Case "btn_explore_bookmark":
+    Case "btn_timeline_bookmark":
+    Case "btn_favourites_bookmark":
+    Case "btn_bookmarks_bookmark":
         If #DEBUG Then DebugPrint("Bookmark button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             Local lv = p_GetActiveListview()
@@ -370,9 +421,21 @@ Function p_GUIEvent(id)
 
     Case "lv_notifications":
     Case "lv_mentions":
+    Case "lv_local":
+    Case "lv_federated":
+    Case "lv_favourites":
+    Case "lv_bookmarks":
         selected_content, selected_reblogged, selected_favourite, selected_bookmark, selected_id, selected_type = moai.DoMethod(id, "GetEntry", "Active")
         p_UpdateActionButtonState()
-        If #DEBUG Then DebugPrint("Notifications Listview selected item changed, id: " .. selected_id)
+        If #DEBUG Then DebugPrint("Listview selected item changed, id: " .. selected_id)
+        Break
+
+    Case "lv_dm":
+        selected_content, selected_id, selected_type = moai.DoMethod(id, "GetEntry", "Active")
+        selected_reblogged = Nil
+        selected_favourite = Nil
+        selected_bookmark = Nil
+        If #DEBUG Then DebugPrint("Listview selected item changed, id: " .. selected_id)
         Break
     
     Case "btn_getnotifications":
@@ -403,9 +466,14 @@ Function p_GUIEvent(id)
         EnableLineHook()
         Break
 
-    Case "btn_getlocal":
-    Case "btn_getfederated":
-    Case "btn_getdms":
+    Case "btn_gettimeline":
+        DisableLineHook()
+        p_GetContent("local")
+        p_GetContent("federated")
+        EnableLineHook()
+        Break
+
+    Case "btn_getdm":
     Case "btn_getfavourites":
     Case "btn_getbookmarks":
     Case "btn_getlists":

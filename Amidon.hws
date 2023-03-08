@@ -20,7 +20,7 @@ Const #DEBUG = True ; Set this to True to get DEBUG output
 ** Information about this app
 */
 @APPTITLE "Amidon"
-@APPVERSION "$VER: Amidon 1.0 (2023-03-04)"
+@APPVERSION "$VER: Amidon 1.0 (2023-03-08)"
 @APPCOPYRIGHT "(C) Copyright 2022-2023 by Dimitris Panokostas"
 @APPAUTHOR "Dimitris Panokostas"
 @APPDESCRIPTION "A Mastodon client for AmigaOS"
@@ -43,11 +43,8 @@ Const #DEBUG = True ; Set this to True to get DEBUG output
 ** The GUI xml definition
 */
 ; We reserve 1 for our prefs file, if it exists (see below)
-; We have 2 GUI options, depending on what the prefs file defines
-; The default is the single/simple view
 ;@FILE 1, "settings.json"
 @FILE 2, "gui/Amidon_single.xml"
-@FILE 3, "gui/Amidon_multi.xml"
 @FILE 4, "gui/Welcome.xml"
 @FILE 5, "gui/Settings.xml"
 @FILE 6, "gui/Login.xml"
@@ -101,7 +98,7 @@ Global selected_favourite = Nil
 Global selected_bookmark = Nil
 
 ; Local variables
-Local gui_file = 2 ; Default to the simple GUI
+Local gui_file = 2
 Local gui ; The GUI definition
 
 ; Check if we should use the Advanced GUI
@@ -110,7 +107,6 @@ If Exists("settings.json")
 	OpenFile(settings_file, "settings.json")
 	settings = ReadTable(settings_file, {Adapter = "default"})
 	CloseFile(settings_file)
-	If HasItem(settings, "gui_mode") And settings.gui_mode = 1 Then gui_file = 3
 EndIf
 
 ; dynamically create GUI from an external *.xml file definition
