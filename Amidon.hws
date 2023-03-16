@@ -10,7 +10,7 @@
 ****************************************************************/
 ; Constants
 Const #ABOUTMSG = "Amidon\nA Mastodon Client for AmigaOS\nCopyright (C) 2023 by Dimitris Panokostas\n"
-Const #DEBUG = True ; Set this to True to get DEBUG output
+Const #DEBUG = False ; Set this to True to get DEBUG output
 
 @VERSION 9,1
 @REQUIRE "hurl", {Link = True}
@@ -101,7 +101,7 @@ Global selected_bookmark = Nil
 Local gui_file = 2
 Local gui ; The GUI definition
 
-; Check if we should use the Advanced GUI
+; Load settings if found
 ; This needs to be checked before we initialize the app below
 If Exists("settings.json")
 	OpenFile(settings_file, "settings.json")
@@ -132,7 +132,7 @@ If Not Exists("settings.json")
 	p_ShowWelcomeDialog()
 EndIf
 
-; If we have a server, try to load any existing access token
+; If we have a server setting configured, try to load any existing access token
 If Not settings.server = Nil And Not EmptyStr(settings.server)
 	p_GetServerAuthorization()	
 	If #DEBUG Then DebugPrint("Token loaded from file: ", token.access_token)
