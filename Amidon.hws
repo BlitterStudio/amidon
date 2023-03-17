@@ -25,6 +25,8 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 @APPAUTHOR "Dimitris Panokostas"
 @APPDESCRIPTION "A Mastodon client for AmigaOS"
 
+@BGPIC 1, "assets/Amidon_logo.png"
+
 /*
 ** Button and list view images
 */
@@ -57,6 +59,8 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 @INCLUDE "Amidon.UI.hws"
 @INCLUDE "Mastodon.API.hws"
 @INCLUDE "StripHTML.hws"
+
+OpenDisplay(1)
 
 ; Global variables
 Global settings = Nil
