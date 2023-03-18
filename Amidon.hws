@@ -60,7 +60,7 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 @INCLUDE "Mastodon.API.hws"
 @INCLUDE "StripHTML.hws"
 
-OpenDisplay(1)
+;OpenDisplay(1)
 
 ; Global variables
 Global settings = Nil
@@ -149,7 +149,7 @@ p_SetServerLabel()
 p_SetUsernameLabel()
 p_GetAccountAvatar(False)
 
-CloseDisplay(1)
+;CloseDisplay(1)
 
 ; main loop
 Repeat
