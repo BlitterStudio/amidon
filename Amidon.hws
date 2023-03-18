@@ -149,6 +149,8 @@ p_SetServerLabel()
 p_SetUsernameLabel()
 p_GetAccountAvatar(False)
 
+CloseDisplay(1)
+
 ; main loop
 Repeat
 	WaitEvent
