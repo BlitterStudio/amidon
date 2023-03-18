@@ -1,7 +1,7 @@
 # amidon
 A Mastodon client for Amiga computers
 
-![Amidon logo](https://raw.githubusercontent.com/BlitterStudio/amidon/main/assets/Amidon_logo.png?token=GHSAT0AAAAAABYC2BDJD6TPVTE2SQ46QF6KZAVQTQQ)
+![Amidon logo](https://blitterstudio.com/wp-content/uploads/2023/03/Amidon_logo.png)
 
 <a rel="me" href="https://mastodon.social/@midwan">Follow me Mastodon!</a>
 
