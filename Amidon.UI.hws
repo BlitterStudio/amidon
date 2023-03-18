@@ -528,8 +528,17 @@ Function p_GUIEvent(id)
     Case "mn_about":
 		moai.Request("Amidon", #ABOUTMSG, "OK")
         Break
+    Case "mn_aboutmui":
+        moai.DoMethod("app", "AboutMUI")
+        Break
+    Case "mn_aboutrapagui":
+        moai.DoMethod("app", "AboutRapaGUI")
+        Break
     Case "mn_settings":
         p_OpenSettingsDialog()
+        Break
+    Case "mn_settingsmui":
+        moai.DoMethod("app", "OpenConfigWindow")
         Break
     Case "mn_quit":
         p_QuitApp()
