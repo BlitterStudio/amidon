@@ -1,7 +1,7 @@
 /****************************************************************
 **                                                             **
 ** Name:        Amidon                                         **
-** Description: An Amiga Mastodon client                       **
+** Description: a Mastodon client for AmigaOS                  **
 ** Author:      Dimitris Panokostas                            **
 ** Version:     1.0                                            **
 ** Date:        2023-03-18                                     **
@@ -28,7 +28,7 @@
 */
 
 ; Constants
-Const #ABOUTMSG = "Amidon\nA Mastodon client for AmigaOS\nCopyright (C) 2023 Dimitris Panokostas\n"
+Const #ABOUTMSG = "Amidon - a Mastodon client for AmigaOS\nCopyright (C) 2023 Dimitris Panokostas\n"
 Const #DEBUG = False ; Set this to True to get DEBUG output
 
 @VERSION 9,1

@@ -544,7 +544,17 @@ Function p_GUIEvent(id)
         moai.DoMethod("dlg_login", "EndModal", 0)
         Break
     Case "mn_about":
-		moai.Request("Amidon", #ABOUTMSG, "OK")
+        Local license = "\nThis program is free software: you can redistribute it and/or modify\n"
+        license = license .. "it under the terms of the GNU General Public License as published by\n"
+        license = license .. "the Free Software Foundation, either version 3 of the License, or\n"
+        license = license .. "(at your option) any later version.\n\n"
+        license = license .. "This program is distributed in the hope that it will be useful,\n"
+        license = license .. "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+        license = license .. "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+        license = license .. "GNU General Public License for more details.\n\n"
+        license = license .. "You should have received a copy of the GNU General Public License\n"
+        license = license .. "along with this program.  If not, see <https://www.gnu.org/licenses/>."
+		moai.Request("Amidon", #ABOUTMSG .. license, "OK")
         Break
     Case "mn_aboutmui":
         moai.DoMethod("app", "AboutMUI")
