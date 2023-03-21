@@ -316,9 +316,14 @@ Function p_PublishStatus(content)
         form:AddContent("in_reply_to_id", selected_id)
     EndIf
     ; TODO
-    ;form:AddContent("media_ids[]", "")
-    ;form:AddContent("poll[options]]", "")
-    ;form:AddContent("poll[expires_in]", "")
+    ;form:AddContent("media_ids[]", "") ;Array of String. Include Attachment IDs to be attached as media. If provided, status becomes optional, and poll cannot be used.
+    ;form:AddContent("poll[options]]", "") ;Array of String. Possible answers to the poll. If provided, media_ids cannot be used, and poll[expires_in] must be provided.
+    ;form:AddContent("poll[expires_in]", "") ;Integer. Duration that the poll should be open, in seconds. If provided, media_ids cannot be used, and poll[options] must be provided.
+    ;form:AddContent("poll[multiple]", "") ;Boolean. Allow multiple choices? Defaults to false.
+    ;form:AddContent("sensitive", "") ;Boolean. Mark status and attached media as sensitive? Defaults to false.
+    ;form:AddContent("spoiler_text", "") ;String. Text to be shown as a warning or subject before the actual content.
+    ;form:AddContent("visibility", "") ;String. Sets the visibility of the posted status to public, unlisted, private or direct
+    ;form:AddContent("language", "") ;String. ISO 639 language code for this status
 
     p_HttpPost(url, form, token.access_token)
 
@@ -331,6 +336,13 @@ Function p_PublishStatus(content)
         moai.DoMethod("txtedit", "Clear")
         moai.Set("lbl_chars", "Text", 500)
     EndIf
+EndFunction
+
+; Add media to a new post
+Function p_AddMedia()
+    ; TODO Open a file requester
+    ; If a file is passed, send that through the API endpoint
+    ; Return the MediaAttachment result
 EndFunction
 
 Function p_StatusAction(id, action)

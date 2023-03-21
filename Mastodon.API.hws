@@ -162,6 +162,10 @@ Function p_PostNewStatus()
     Return("/api/v1/statuses")
 EndFunction
 
+Function p_PostMedia()
+    Return("/api/v2/media")
+EndFunction
+
 ; GET all notifications
 Function p_GetNotifications(since_id, type, limit)
     Local endpoint = "/api/v1/notifications"

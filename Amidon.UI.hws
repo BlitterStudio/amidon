@@ -537,6 +537,10 @@ Function p_GUIEvent(id)
         Local status = moai.Get("txtedit", "Text")
         p_PublishStatus(status)
         Break
+    Case "btn_addmedia":
+        ; TODO parse result of AddMedia, we need the id(s) for publishing
+        p_AddMedia()
+        Break
     Case "btn_dlg_OK":
         moai.DoMethod("dlg_generic", "EndModal", 0)
         Break
