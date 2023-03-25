@@ -49,6 +49,7 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 /*
 ** Button and list view images
 */
+@BRUSH 0, "assets/Amidon_logo.png"
 @BRUSH 1, "assets/anonymous.png"
 @BRUSH 2, "assets/mastodon_logo-25%.png", {LoadAlpha = True}
 @BRUSH 3, "assets/Add.png", {LoadAlpha = True}
