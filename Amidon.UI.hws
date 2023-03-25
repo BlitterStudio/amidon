@@ -75,8 +75,8 @@ EndFunction
 Function p_SetCWStatus()
     If sensitive = True
         moai.Set("txt_cw", "Hide", False)
-        moai.Set("txt_cw", "Hint", "Write your warning here")
     Else
+        moai.Set("txt_cw", "Text", Nil)
         moai.Set("txt_cw", "Hide", True)
         spoiler_text = Nil
     EndIf

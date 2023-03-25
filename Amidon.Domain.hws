@@ -311,10 +311,12 @@ Function p_PublishStatus(content)
     Local url = "https://" .. settings.server .. api_endpoint
     Local form = hurl.Form()
     form:AddContent("status", content)
+
     If moai.Get("txt_reply_to", "Text") <> Nil
         If #DEBUG Then DebugPrint("Replying to toot with id: ".. selected_id)
         form:AddContent("in_reply_to_id", selected_id)
     EndIf
+
     ; TODO
     ;form:AddContent("media_ids[]", "") ;Array of String. Include Attachment IDs to be attached as media. If provided, status becomes optional, and poll cannot be used.
     ;form:AddContent("poll[options]]", "") ;Array of String. Possible answers to the poll. If provided, media_ids cannot be used, and poll[expires_in] must be provided.
@@ -324,6 +326,14 @@ Function p_PublishStatus(content)
     If spoiler_text <> Nil
         form:AddContent("spoiler_text", spoiler_text) ;String. Text to be shown as a warning or subject before the actual content.
     EndIf
+
+    If sensitive = True
+        form:AddContent("sensitive", sensitive) ;Boolean. Mark status and attached media as sensitive? Defaults to false.    
+        If spoiler_text <> Nil
+            form:AddContent("spoiler_text", spoiler_text) ;String. Text to be shown as a warning or subject before the actual content.
+        EndIf
+    EndIf
+
     form:AddContent("visibility", active_visibility) ;String. Sets the visibility of the posted status to public, unlisted, private or direct
     form:AddContent("language", language) ;String. ISO 639 language code for this status
 
@@ -337,6 +347,9 @@ Function p_PublishStatus(content)
         p_ClearReplyTo()
         moai.DoMethod("txtedit", "Clear")
         moai.Set("lbl_chars", "Text", 500)
+        If sensitive = True
+            moai.Set("btn_cw", "Selected", False)
+        EndIf
     EndIf
 EndFunction
 
@@ -400,7 +413,7 @@ Function p_EventFunc(msg)
         Case "DoubleClick":
             p_DoubleClickEvent(msg.id)
 
-        ; Menu items / Toggle buttons
+        ; Menu items / Toggle buttons / Combobox items
         Case "Selected":
 			p_GUIEvent(msg.id)
         
