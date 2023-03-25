@@ -4,7 +4,7 @@
 ** Description: a Mastodon client for AmigaOS                  **
 ** Author:      Dimitris Panokostas                            **
 ** Version:     1.0                                            **
-** Date:        2023-03-18                                     **
+** Date:        2023-03-25                                     **
 ** Interpreter: Hollywood 9.1+                                 **
 **                                                             **
 ****************************************************************/
@@ -39,7 +39,7 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 ** Information about this app
 */
 @APPTITLE "Amidon"
-@APPVERSION "$VER: Amidon 1.0 (2023-03-18)"
+@APPVERSION "$VER: Amidon 1.0 (2023-03-25)"
 @APPCOPYRIGHT "(C) Copyright 2023 by Dimitris Panokostas"
 @APPAUTHOR "Dimitris Panokostas"
 @APPDESCRIPTION "A Mastodon client for AmigaOS"
@@ -54,7 +54,7 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 @BRUSH 2, "assets/mastodon_logo-25%.png", {LoadAlpha = True}
 @BRUSH 3, "assets/Add.png", {LoadAlpha = True}
 @BRUSH 4, "assets/Chart2.png", {LoadAlpha = True}
-@BRUSH 5, "assets/Web.png", {LoadAlpha = True}
+;@BRUSH 5, "assets/Web.png", {LoadAlpha = True}
 @BRUSH 6, "assets/Comments.png", {LoadAlpha = True}
 @BRUSH 7, "assets/Refresh.png", {LoadAlpha = True}
 @BRUSH 8, "assets/Favorite.png", {LoadAlpha = True}
@@ -72,6 +72,7 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 @FILE 6, "gui/Login.xml"
 @FILE 7, "gui/Dialog.xml"
 @FILE 8, "gui/HtmlView.xml"
+@FILE 9, "gui/SelectVisibility.xml"
 
 @DISPLAY {Title = "Amidon", Sizeable = True, Layers = True}
 @INCLUDE "Amidon.Domain.hws"
@@ -100,6 +101,8 @@ Global generic_dialog_file = 7
 Global generic_dialog = Nil
 Global htmlview_dialog_file = 8
 Global htmlview_dialog = Nil
+Global visibility_dialog_file = 9
+Global visilibity_dialog = Nil
 
 Global user_avatar_brush = 6
 
@@ -120,6 +123,13 @@ Global selected_type = Nil
 Global selected_reblogged = Nil
 Global selected_favourite = Nil
 Global selected_bookmark = Nil
+
+; New posts statuses
+Global sensitive = False
+Global spoiler_text = Nil
+Global language = "en"
+Global active_visibility_index = 0
+Global active_visibility = "public"
 
 ; Local variables
 Local gui_file = 2

@@ -29,23 +29,26 @@
             <pageview id="pv_main" mode="List">
                 <vgroup title="Publish">
 
-                    <hgroup>
+                    <hgroup id="grp_reply_to" Hide="True">
                         <Label id="lbl_reply_to" Align="Left">Reply to:</Label>
                         <rectangle/>
                         <rectangle/>
                         <button id="btn_clear_reply_to" tooltip="Clear">X</button>
                     </hgroup>
-                    <TextView id="txt_reply_to" Styled="True"/>
+                    <TextView id="txt_reply_to" Styled="True" Hide="True"/>
+
+                    <TextEntry id="txt_cw" Hint="Write your warning here" Hide="True"/>
+
                     <texteditor id="txtedit" hint="What's on your mind?" notify="HasChanged"/>
 
                     <hgroup>
                         <button id="btn_addmedia" icon="3" tooltip="Add images, a video or an audio file"/>
                         <button id="btn_addpoll" icon="4" tooltip="Add a poll"/>
-                        <button id="btn_changeprivacy" icon="5" tooltip="Change post privacy"/>
+                        <button id="btn_changeprivacy" tooltip="Change post privacy">Public</button>
                     </hgroup>
 
                     <hgroup>
-                        <button id="btn_cw" tooltip="Add content warning">CW</button>
+                        <button id="btn_cw" tooltip="Add content warning" Toggle="True">CW</button>
                         <button id="btn_lang" tooltip="Change language">EN</button>
                          <rectangle/>
                         <label id="lbl_chars">500</label>

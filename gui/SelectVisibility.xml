@@ -1,0 +1,10 @@
+<dialog id="dlg_visibility" title="">
+    <vgroup>
+        <radio id="rdo_visibility" Title="Select visibility" Notify="Active">
+            <item>Public</item>
+            <item>Unlisted</item>
+            <item>Followers only</item>
+            <item>Mentioned people only</item>
+        </radio>
+    </vgroup>
+</dialog>

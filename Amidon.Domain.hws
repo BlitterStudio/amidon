@@ -320,10 +320,12 @@ Function p_PublishStatus(content)
     ;form:AddContent("poll[options]]", "") ;Array of String. Possible answers to the poll. If provided, media_ids cannot be used, and poll[expires_in] must be provided.
     ;form:AddContent("poll[expires_in]", "") ;Integer. Duration that the poll should be open, in seconds. If provided, media_ids cannot be used, and poll[options] must be provided.
     ;form:AddContent("poll[multiple]", "") ;Boolean. Allow multiple choices? Defaults to false.
-    ;form:AddContent("sensitive", "") ;Boolean. Mark status and attached media as sensitive? Defaults to false.
-    ;form:AddContent("spoiler_text", "") ;String. Text to be shown as a warning or subject before the actual content.
-    ;form:AddContent("visibility", "") ;String. Sets the visibility of the posted status to public, unlisted, private or direct
-    ;form:AddContent("language", "") ;String. ISO 639 language code for this status
+    form:AddContent("sensitive", sensitive) ;Boolean. Mark status and attached media as sensitive? Defaults to false.    
+    If spoiler_text <> Nil
+        form:AddContent("spoiler_text", spoiler_text) ;String. Text to be shown as a warning or subject before the actual content.
+    EndIf
+    form:AddContent("visibility", active_visibility) ;String. Sets the visibility of the posted status to public, unlisted, private or direct
+    form:AddContent("language", language) ;String. ISO 639 language code for this status
 
     p_HttpPost(url, form, token.access_token)
 
@@ -392,7 +394,7 @@ Function p_EventFunc(msg)
         Case "Pressed":
             p_GUIEvent(msg.id)
 
-        ; ListView items
+        ; ListView/Radio items
         Case "Active":
             p_GUIEvent(msg.id)
         Case "DoubleClick":

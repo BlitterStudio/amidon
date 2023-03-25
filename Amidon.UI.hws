@@ -65,6 +65,22 @@ Function p_ClearListView(type)
     moai.DoMethod(listview, "Clear")
 EndFunction
 
+Function p_OpenVisibilityDialog(index)
+    While Not Eof(visibility_dialog_file) Do visilibity_dialog = visilibity_dialog .. ReadLine(visibility_dialog_file)
+    moai.CreateDialog(visilibity_dialog)
+    p_UpdateVisibility(index)
+    moai.DoMethod("dlg_visibility", "ShowModal")
+EndFunction
+
+Function p_SetCWStatus()
+    If sensitive = True
+        moai.Set("txt_cw", "Hide", False)
+        moai.Set("txt_cw", "Hint", "Write your warning here")
+    Else
+        moai.Set("txt_cw", "Hide", True)
+        spoiler_text = Nil
+    EndIf
+EndFunction
 /*
 ** Write item to the ListView
 */
@@ -208,6 +224,8 @@ EndFunction
 
 Function p_ClearReplyTo()
     moai.Set("txt_reply_to", "Text", "")
+    moai.Set("txt_reply_to", "Hide", True)
+    moai.Set("grp_reply_to", "Hide", True)
     selected_id = Nil
     selected_content = Nil
 EndFunction
@@ -329,6 +347,19 @@ Function p_UpdateActionButton2State()
 EndFunction
 
 /*
+* Update the selected Visibility option in the modal dialog
+*/
+Function p_UpdateVisibility(index)
+    ; Disable the event handler temporarily, otherwise it will trigger an event for the button
+    InstallEventHandler({RapaGUI = 0})
+
+    moai.Set("rdo_visibility", "Active", index)
+
+    ; Re-enable the event handler
+    InstallEventHandler({RapaGUI = p_EventFunc})
+EndFunction
+
+/*
 ** Event handlers for the GUI
 */
 Function p_DoubleClickEvent(id)
@@ -355,6 +386,23 @@ EndFunction
 Function p_GUIEvent(id)
     Switch id FallThrough
 
+    Case "rdo_visibility":
+        ; public, unlisted, private or direct
+        active_visibility_index = moai.Get("rdo_visibility", "Active")
+        Switch active_visibility_index
+        Case 0:
+            active_visibility = "Public"
+        Case 1:
+            active_visibility = "Unlisted"
+        Case 2:
+            active_visibility = "Private"
+        Case 3:
+            active_visibility = "Direct"
+        EndSwitch
+        moai.DoMethod("dlg_visibility", "EndModal", 1)
+        moai.Set("btn_changeprivacy", "Text", active_visibility)
+        Break
+
     Case "btn_clear_reply_to":
         p_ClearReplyTo()
         Break
@@ -372,6 +420,8 @@ Function p_GUIEvent(id)
     Case "btn_bookmarks_reply":
         If #DEBUG Then DebugPrint("Reply button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
+            moai.Set("txt_reply_to", "Hide", False)
+            moai.Set("grp_reply_to", "Hide", False)
             moai.Set("txt_reply_to", "Text", selected_content)
             moai.Set("pv_main", "Active", "First")
         EndIf
@@ -535,11 +585,21 @@ Function p_GUIEvent(id)
         Break
     Case "btn_Publish":
         Local status = moai.Get("txtedit", "Text")
+        If sensitive = True
+            spoiler_text = moai.Get("txt_cw", "Text")
+        EndIf
         p_PublishStatus(status)
         Break
     Case "btn_addmedia":
         ; TODO parse result of AddMedia, we need the id(s) for publishing
         p_AddMedia()
+        Break
+    Case "btn_cw":
+        sensitive = moai.Get("btn_cw", "Selected")
+        p_SetCWStatus()
+        Break
+    Case "btn_changeprivacy":
+        p_OpenVisibilityDialog(active_visibility_index)
         Break
     Case "btn_dlg_OK":
         moai.DoMethod("dlg_generic", "EndModal", 0)
