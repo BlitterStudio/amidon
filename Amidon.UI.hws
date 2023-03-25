@@ -122,12 +122,22 @@ Function p_SetPollStatus()
         ;hide relevant area
         moai.Set("txt_poll_choice1", "Hide", True)
         moai.Set("txt_poll_choice2", "Hide", True)
+        moai.Set("grp_poll_choice3", "Hide", True)
+        moai.Set("grp_poll_choice4", "Hide", True)
         moai.Set("grp_poll_options", "Hide", True)
 
+        ;clear any poll variables
+        moai.Set("txt_poll_choice1", "Text", Nil)
+        moai.Set("txt_poll_choice2", "Text", Nil)
+        moai.Set("txt_poll_choice3", "Text", Nil)
+        moai.Set("txt_poll_choice4", "Text", Nil)
         poll_options = Nil
         poll_options_num = 0
         poll_expires = 0
         poll_multi = False
+
+        ;re-enable the Add Choice button
+        moai.Set("btn_add_poll_choice", "Disabled", False)
 
         ;re-enable the media button
         moai.Set("btn_addmedia", "Hide", False)
@@ -145,9 +155,9 @@ Function p_GetPollOptions()
     Local duration_value = moai.Get("cmb_poll_duration", "Value")
     Switch duration_value
     Case "5 minutes":
-        poll_expires = 5 * 60
+        poll_expires = 60 * 5
     Case "30 minutes":
-        poll_expires = 30 * 60
+        poll_expires = 60 * 30
     Case "1 hour":
         poll_expires = 60 * 60
     Case "6 hours":

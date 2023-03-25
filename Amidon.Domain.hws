@@ -323,7 +323,9 @@ Function p_PublishStatus(content)
     If poll = True
         If #DEBUG Then DebugPrint("DEBUG: Serialized poll options: ".. SerializeTable(poll_options))
         If #DEBUG Then DebugPrint("DEBUG: Poll expires in: " .. poll_expires .. " seconds")
-        form:AddContent("poll[options][]", SerializeTable(poll_options)) ;Array of String. Possible answers to the poll. If provided, media_ids cannot be used, and poll[expires_in] must be provided.
+        For Local i = 0 To poll_options_num - 1
+            form:AddContent("poll[options][]", poll_options[i]) ;Array of String. Possible answers to the poll. If provided, media_ids cannot be used, and poll[expires_in] must be provided.
+        Next
         form:AddContent("poll[expires_in]", poll_expires) ;Integer. Duration that the poll should be open, in seconds. If provided, media_ids cannot be used, and poll[options] must be provided.
         form:AddContent("poll[multiple]", poll_multi) ;Boolean. Allow multiple choices? Defaults to false.
     EndIf
@@ -350,6 +352,9 @@ Function p_PublishStatus(content)
         moai.Set("lbl_chars", "Text", 500)
         If sensitive = True
             moai.Set("btn_cw", "Selected", False)
+        EndIf
+        If poll = True
+            moai.Set("btn_addpoll", "Selected", False)
         EndIf
     EndIf
 EndFunction
