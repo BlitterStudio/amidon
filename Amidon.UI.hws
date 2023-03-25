@@ -81,6 +81,88 @@ Function p_SetCWStatus()
         spoiler_text = Nil
     EndIf
 EndFunction
+
+Function p_RemovePollChoice()
+    If poll_options_num = 4
+        moai.Set("txt_poll_choice4", "Text", Nil)
+        moai.Set("grp_poll_choice4", "Hide", True)
+    Else 
+        moai.Set("txt_poll_choice3", "Text", Nil)
+        moai.Set("grp_poll_choice3", "Hide", True)
+    EndIf
+
+    poll_options_num = poll_options_num - 1
+    moai.Set("btn_add_poll_choice", "Disabled", False)
+EndFunction
+
+Function p_AddPollChoice()
+    If poll_options_num = 2
+        moai.Set("grp_poll_choice3", "Hide", False)
+    Else 
+        moai.Set("grp_poll_choice4", "Hide", False)
+        moai.Set("btn_add_poll_choice", "Disabled", True)
+    EndIf
+
+    poll_options_num = poll_options_num + 1
+EndFunction
+
+Function p_SetPollStatus()
+    If poll = True
+        ;show relevant area
+        moai.Set("txt_poll_choice1", "Hide", False)
+        moai.Set("txt_poll_choice2", "Hide", False)
+        moai.Set("grp_poll_options", "Hide", False)
+        moai.Set("cmb_poll_duration", "Value", "1 day")
+
+        poll_options_num = 2
+
+        ;when a poll is active, media cannot be used
+        moai.Set("btn_addmedia", "Hide", True)
+    Else
+        ;hide relevant area
+        moai.Set("txt_poll_choice1", "Hide", True)
+        moai.Set("txt_poll_choice2", "Hide", True)
+        moai.Set("grp_poll_options", "Hide", True)
+
+        poll_options = Nil
+        poll_options_num = 0
+        poll_expires = 0
+        poll_multi = False
+
+        ;re-enable the media button
+        moai.Set("btn_addmedia", "Hide", False)
+    EndIf
+EndFunction
+
+Function p_GetPollOptions()
+    poll_options = {}
+    For Local i = 0 To poll_options_num - 1
+        Local id = "txt_poll_choice" .. i + 1
+        poll_options[i] = moai.Get(id, "Text")
+        If #DEBUG Then DebugPrint("DEBUG: poll option added: " .. poll_options[i])
+    Next
+
+    Local duration_value = moai.Get("cmb_poll_duration", "Value")
+    Switch duration_value
+    Case "5 minutes":
+        poll_expires = 5 * 60
+    Case "30 minutes":
+        poll_expires = 30 * 60
+    Case "1 hour":
+        poll_expires = 60 * 60
+    Case "6 hours":
+        poll_expires = 60 * 60 * 6
+    Case "12 hours":
+        poll_expires = 60 * 60 * 12
+    Case "1 day":
+        poll_expires = 60 * 60 * 24
+    Case "3 days":
+        poll_expires = 60 * 60 * 24 * 3
+    Case "7 days":
+        poll_expires = 60 * 60 * 24 * 7
+    EndSwitch
+EndFunction
+
 /*
 ** Write item to the ListView
 */
@@ -588,11 +670,28 @@ Function p_GUIEvent(id)
         If sensitive = True
             spoiler_text = moai.Get("txt_cw", "Text")
         EndIf
+        If poll = True
+            p_GetPollOptions()
+        EndIf
         p_PublishStatus(status)
         Break
     Case "btn_addmedia":
         ; TODO parse result of AddMedia, we need the id(s) for publishing
         p_AddMedia()
+        Break
+    Case "btn_addpoll":
+        poll = moai.Get("btn_addpoll", "Selected")
+        p_SetPollStatus()
+        Break
+    Case "btn_add_poll_choice":
+        p_AddPollChoice()
+        Break
+    Case "btn_poll_remove3":
+    Case "btn_poll_remove4"
+        p_RemovePollChoice()
+        Break
+    Case "cmb_poll_duration":
+        p_GetPollOptions()
         Break
     Case "btn_cw":
         sensitive = moai.Get("btn_cw", "Selected")

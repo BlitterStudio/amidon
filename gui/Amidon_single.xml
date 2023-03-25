@@ -41,9 +41,34 @@
 
                     <texteditor id="txtedit" hint="What's on your mind?" notify="HasChanged"/>
 
+                    <TextEntry id="txt_poll_choice1" Hint="Choice 1" Hide="True"/>
+                    <TextEntry id="txt_poll_choice2" Hint="Choice 2" Hide="True"/>
+                    <hgroup id="grp_poll_choice3" Hide="True">
+                        <TextEntry id="txt_poll_choice3" Hint="Choice 3"/>
+                        <button id="btn_poll_remove3" tooltip="Remove this choice">X</button>
+                    </hgroup>
+                    <hgroup id="grp_poll_choice4" Hide="True">
+                        <TextEntry id="txt_poll_choice4" Hint="Choice 4"/>
+                        <button id="btn_poll_remove4" tooltip="Remove this choice">X</button>
+                    </hgroup>
+
+                    <hgroup id="grp_poll_options" Hide="True">
+                        <button id="btn_add_poll_choice" tooltip="Add a choice">Add choice</button>
+                        <combobox id="cmb_poll_duration">
+                            <item>5 minutes</item>
+                            <item>30 minutes</item>
+                            <item>1 hour</item>
+                            <item>6 hours</item>
+                            <item>12 hours</item>
+                            <item>1 day</item>
+                            <item>3 days</item>
+                            <item>7 days</item>
+                        </combobox>
+                    </hgroup>
+
                     <hgroup>
                         <button id="btn_addmedia" icon="3" tooltip="Add images, a video or an audio file"/>
-                        <button id="btn_addpoll" icon="4" tooltip="Add a poll"/>
+                        <button id="btn_addpoll" icon="4" tooltip="Add a poll" Toggle="True"/>
                         <button id="btn_changeprivacy" tooltip="Change post privacy">Public</button>
                     </hgroup>
 

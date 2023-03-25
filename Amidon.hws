@@ -125,6 +125,11 @@ Global selected_favourite = Nil
 Global selected_bookmark = Nil
 
 ; New posts statuses
+Global poll = False
+Global poll_options = {}
+Global poll_options_num = 0
+Global poll_expires = 0
+Global poll_multi = False
 Global sensitive = False
 Global spoiler_text = Nil
 Global language = "en"

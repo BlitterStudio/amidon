@@ -319,12 +319,13 @@ Function p_PublishStatus(content)
 
     ; TODO
     ;form:AddContent("media_ids[]", "") ;Array of String. Include Attachment IDs to be attached as media. If provided, status becomes optional, and poll cannot be used.
-    ;form:AddContent("poll[options]]", "") ;Array of String. Possible answers to the poll. If provided, media_ids cannot be used, and poll[expires_in] must be provided.
-    ;form:AddContent("poll[expires_in]", "") ;Integer. Duration that the poll should be open, in seconds. If provided, media_ids cannot be used, and poll[options] must be provided.
-    ;form:AddContent("poll[multiple]", "") ;Boolean. Allow multiple choices? Defaults to false.
-    form:AddContent("sensitive", sensitive) ;Boolean. Mark status and attached media as sensitive? Defaults to false.    
-    If spoiler_text <> Nil
-        form:AddContent("spoiler_text", spoiler_text) ;String. Text to be shown as a warning or subject before the actual content.
+    
+    If poll = True
+        If #DEBUG Then DebugPrint("DEBUG: Serialized poll options: ".. SerializeTable(poll_options))
+        If #DEBUG Then DebugPrint("DEBUG: Poll expires in: " .. poll_expires .. " seconds")
+        form:AddContent("poll[options][]", SerializeTable(poll_options)) ;Array of String. Possible answers to the poll. If provided, media_ids cannot be used, and poll[expires_in] must be provided.
+        form:AddContent("poll[expires_in]", poll_expires) ;Integer. Duration that the poll should be open, in seconds. If provided, media_ids cannot be used, and poll[options] must be provided.
+        form:AddContent("poll[multiple]", poll_multi) ;Boolean. Allow multiple choices? Defaults to false.
     EndIf
 
     If sensitive = True
