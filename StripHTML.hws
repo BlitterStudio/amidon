@@ -89,7 +89,7 @@ Function base:StripHTML(data$)
     data$ = ReplaceStr(data$,"</span>", "")
     data$ = ReplaceStr(data$,"</a>", "")
 
-    data$ = PatternReplaceStr(data$, "<(.*)>", "")
+    data$ = PatternReplaceStr(data$, "<.->", "")
     
     Return(StripStr(data$))
 EndFunction
