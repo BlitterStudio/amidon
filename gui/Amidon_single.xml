@@ -67,8 +67,8 @@
                     </hgroup>
 
                     <hgroup>
-                        <button id="btn_addmedia" icon="3" tooltip="Add images, a video or an audio file"/>
-                        <button id="btn_addpoll" icon="4" tooltip="Add a poll" Toggle="True"/>
+                        <button id="btn_addmedia" tooltip="Add images, a video or an audio file">Add Media</button>
+                        <button id="btn_addpoll" tooltip="Add a poll" Toggle="True">Add Poll</button>
                         <button id="btn_changeprivacy" tooltip="Change post privacy">Public</button>
                     </hgroup>
 

@@ -52,8 +52,8 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 @BRUSH 0, "assets/Amidon_logo.png"
 @BRUSH 1, "assets/anonymous.png"
 @BRUSH 2, "assets/mastodon_logo-25%.png", {LoadAlpha = True}
-@BRUSH 3, "assets/Add.png", {LoadAlpha = True}
-@BRUSH 4, "assets/Chart2.png", {LoadAlpha = True}
+;@BRUSH 3, "assets/Add.png", {LoadAlpha = True}
+;@BRUSH 4, "assets/Chart2.png", {LoadAlpha = True}
 ;@BRUSH 5, "assets/Web.png", {LoadAlpha = True}
 @BRUSH 6, "assets/Comments.png", {LoadAlpha = True}
 @BRUSH 7, "assets/Refresh.png", {LoadAlpha = True}

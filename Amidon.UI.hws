@@ -107,6 +107,7 @@ Function p_AddPollChoice()
 EndFunction
 
 Function p_SetPollStatus()
+    DisableLineHook() ; Temporarily disable this, to increase performance
     If poll = True
         ;show relevant area
         moai.Set("txt_poll_choice1", "Hide", False)
@@ -142,6 +143,7 @@ Function p_SetPollStatus()
         ;re-enable the media button
         moai.Set("btn_addmedia", "Hide", False)
     EndIf
+    EnableLineHook()
 EndFunction
 
 Function p_GetPollOptions()
