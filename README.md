@@ -1,12 +1,14 @@
 # amidon
 A Mastodon client for Amiga computers
 
-![Amidon logo](https://blitterstudio.com/wp-content/uploads/2023/03/Amidon_logo-e1679138569557.png)
+![Amidon logo](https://raw.githubusercontent.com/BlitterStudio/amidon/main/assets/Amidon_logo.png)
 
 <a rel="me" href="https://mastodon.social/@midwan">Follow me Mastodon!</a>
 
 Amidon is a Mastodon native client for computers (or emulators) running AmigaOS 3.x.
 It allows the user to connect and authenticate with a Mastodon server instance, post new toots and interact with the various aspects of Mastodon (replies, favourites, bookmarks, etc.).
+
+![Amidon GUI](https://raw.githubusercontent.com/BlitterStudio/amidon/main/screenshots/Amidon_Publish.png)
 
 ## Requirements
 - AmigaOS 3.x
