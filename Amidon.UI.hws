@@ -324,6 +324,10 @@ Function p_ClearReplyTo()
     selected_content = Nil
 EndFunction
 
+Function p_ClearMediaIds()
+    If Not IsTableEmpty(media_ids) Then media_ids = {}
+EndFunction
+
 Function p_GetActiveListview()
     Switch moai.Get("pv_main", "Active")
 
@@ -688,8 +692,21 @@ Function p_GUIEvent(id)
         p_PublishStatus(status)
         Break
     Case "btn_addmedia":
-        ; TODO parse result of AddMedia, we need the id(s) for publishing
-        p_AddMedia()
+        ; TODO show a warning that only up to 4 attachments are allowed
+        If TableItems(media_ids) < 4
+            Local file = FileRequest("Select file", {
+                {Description = "Images", Filter = "png|jpg|gif"},
+                {Description = "Videos", Filter = "mp4|m4v|mov|webm"},
+                {Description = "Audio", Filter = "mp3|ogg|wav|flac|opus|aac|m4a|3gp"}
+            })
+            If file <> ""
+                p_AddMedia(file)
+                If TableItems(media_ids) > 0
+                    ; When Media is provided, Polls cannot be used
+                    moai.Set("btn_addpoll", "Hide", True)
+                EndIf
+            EndIf
+        EndIf
         Break
     Case "btn_addpoll":
         poll = moai.Get("btn_addpoll", "Selected")

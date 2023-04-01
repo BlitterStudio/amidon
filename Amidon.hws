@@ -125,6 +125,7 @@ Global selected_favourite = Nil
 Global selected_bookmark = Nil
 
 ; New posts statuses
+Global media_ids = {}
 Global poll = False
 Global poll_options = {}
 Global poll_options_num = 0

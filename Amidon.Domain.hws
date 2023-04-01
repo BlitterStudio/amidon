@@ -317,9 +317,12 @@ Function p_PublishStatus(content)
         form:AddContent("in_reply_to_id", selected_id)
     EndIf
 
-    ; TODO
-    ;form:AddContent("media_ids[]", "") ;Array of String. Include Attachment IDs to be attached as media. If provided, status becomes optional, and poll cannot be used.
-    
+    If Not IsTableEmpty(media_ids)
+        For Local i = 0 To TableItems(media_ids) - 1
+            form:AddContent("media_ids[]", media_ids[i]) ;Array of String. Include Attachment IDs to be attached as media. If provided, status becomes optional, and poll cannot be used.
+        Next
+    EndIf
+        
     If poll = True
         If #DEBUG Then DebugPrint("DEBUG: Serialized poll options: ".. SerializeTable(poll_options))
         If #DEBUG Then DebugPrint("DEBUG: Poll expires in: " .. poll_expires .. " seconds")
@@ -348,6 +351,7 @@ Function p_PublishStatus(content)
     Else
         If #DEBUG Then DebugPrint("Content published successfully!")
         p_ClearReplyTo()
+        p_ClearMediaIds()
         moai.DoMethod("txtedit", "Clear")
         moai.Set("lbl_chars", "Text", 500)
         If sensitive = True
@@ -360,10 +364,33 @@ Function p_PublishStatus(content)
 EndFunction
 
 ; Add media to a new post
-Function p_AddMedia()
-    ; TODO Open a file requester
-    ; If a file is passed, send that through the API endpoint
-    ; Return the MediaAttachment result
+Function p_AddMedia(file)
+    If file = Nil Or file = "" Then Return
+    If settings.server = Nil Or EmptyStr(settings.server)
+        If #DEBUG Then DebugPrint("Received Publish status request, but server setting was empty")
+        Return
+    EndIf
+    If token = Nil Or HasItem(token, "error") Or EmptyStr(token.access_token) 
+        If #DEBUG Then DebugPrint("Token is Nil or missing an access_token, cannot proceed")
+        Return
+    EndIf
+
+    Local api_endpoint = p_PostMedia()
+    Local url = "https://" .. settings.server .. api_endpoint
+    Local form = hurl.Form()
+
+    If #DEBUG Then DebugPrint("Adding FilePart for file: " .. FilePart(file) .. ", full path: " .. file)
+    form:AddFile("file", file)
+    
+    p_HttpPost(url, form, token.access_token)
+
+    Local result = p_DeserializeJson("publish_status")
+    If HasItem(result, "error")
+        p_OpenGenericDialog("Publish failed dure to error:", result["error"])
+    Else
+        ; Return the MediaAttachment result
+        InsertItem(media_ids, result["id"])
+    EndIf
 EndFunction
 
 Function p_StatusAction(id, action)
