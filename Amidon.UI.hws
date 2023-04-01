@@ -175,6 +175,43 @@ Function p_GetPollOptions()
     EndSwitch
 EndFunction
 
+Function p_SetMediaStatus()
+    DisableLineHook() ; Temporarily disable this, to increase performance
+
+    If IsTableEmpty(media_ids)
+        If #DEBUG Then DebugPrint("Media ids table was empty, hidding all text entries...")
+        ; Hide all media text entries
+        For Local i = 1 To 4
+            moai.Set("grp_media" .. i, "Hide", True)
+            moai.Set("txt_media" .. i, "Text", "")
+        Next
+        ; Show poll button
+        moai.Set("btn_addpoll", "Hide", False)
+    Else
+        Local items = TableItems(media_ids)
+        If #DEBUG Then DebugPrint("Found " .. items .. " items in the table")
+        If items > 0
+            ; Show media text entries that are relevant
+            For Local i = 1 To items
+                moai.Set("grp_media" .. i, "Hide", False)
+            Next
+        EndIf
+        If items < 4
+            If #DEBUG Then DebugPrint("Hidding extra text entries")
+            Local idx = items + 1
+            While idx < 4
+                moai.Set("grp_media" .. idx, "Hide", True)
+                idx = idx + 1
+            Wend
+        EndIf
+        
+        ; When Media is provided, Polls cannot be used
+        moai.Set("btn_addpoll", "Hide", True)
+    EndIf
+
+    EnableLineHook()
+EndFunction
+
 /*
 ** Write item to the ListView
 */
@@ -701,12 +738,32 @@ Function p_GUIEvent(id)
             })
             If file <> ""
                 p_AddMedia(file)
-                If TableItems(media_ids) > 0
-                    ; When Media is provided, Polls cannot be used
-                    moai.Set("btn_addpoll", "Hide", True)
-                EndIf
+                moai.Set("txt_media" .. TableItems(media_ids), "Text", FilePart(file))
+                p_SetMediaStatus()
             EndIf
         EndIf
+        Break
+    Case "btn_media_remove1":
+    Case "btn_media_remove2":
+    Case "btn_media_remove3":
+    Case "btn_media_remove4":
+        Local string = UnrightStr(id, StrLen("btn_media_remove"))
+        Local item = ToNumber(string)
+        If #DEBUG Then DebugPrint("Media remove item " .. item .. " triggered")
+        RemoveItem(media_ids, item - 1)
+        If #DEBUG Then DebugPrint("Removed media item, current count is: " .. TableItems(media_ids))
+
+        ; We need to reorganize the text entries if the item removed wasn't the last one
+        Local i = 1
+        While i < item + 1
+            Local text = moai.Get("txt_media" .. item + 1, "Text")
+            If #DEBUG Then DebugPrint("Replacing text of item " .. i .. " with " .. text)
+            moai.Set("txt_media" .. i, "Text", text)
+            i = i + 1
+        Wend
+        moai.Set("txt_media" .. i, "Text", "")
+
+        p_SetMediaStatus()
         Break
     Case "btn_addpoll":
         poll = moai.Get("btn_addpoll", "Selected")

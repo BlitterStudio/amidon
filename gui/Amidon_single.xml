@@ -41,6 +41,23 @@
 
                     <texteditor id="txtedit" hint="What's on your mind?" notify="HasChanged"/>
 
+                    <hgroup id="grp_media1" Hide="True">
+                        <TextEntry id="txt_media1"/>
+                        <Button id="btn_media_remove1" tooltip="Remove">X</Button>
+                    </hgroup>
+                    <hgroup id="grp_media2" Hide="True">
+                        <TextEntry id="txt_media2"/>
+                        <Button id="btn_media_remove2" tooltip="Remove">X</Button>
+                    </hgroup>
+                    <hgroup id="grp_media3" Hide="True">
+                        <TextEntry id="txt_media3"/>
+                        <Button id="btn_media_remove3" tooltip="Remove">X</Button>
+                    </hgroup>
+                    <hgroup id="grp_media4" Hide="True">
+                        <TextEntry id="txt_media4"/>
+                        <Button id="btn_media_remove4" tooltip="Remove">X</Button>
+                    </hgroup>
+
                     <TextEntry id="txt_poll_choice1" Hint="Choice 1" Hide="True"/>
                     <TextEntry id="txt_poll_choice2" Hint="Choice 2" Hide="True"/>
                     <hgroup id="grp_poll_choice3" Hide="True">

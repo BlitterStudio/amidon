@@ -360,6 +360,7 @@ Function p_PublishStatus(content)
         If poll = True
             moai.Set("btn_addpoll", "Selected", False)
         EndIf
+        p_SetMediaStatus()
     EndIf
 EndFunction
 
