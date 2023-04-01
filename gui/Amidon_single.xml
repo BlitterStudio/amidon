@@ -91,7 +91,7 @@
 
                     <hgroup>
                         <button id="btn_cw" tooltip="Add content warning" Toggle="True">CW</button>
-                        <button id="btn_lang" tooltip="Change language">EN</button>
+                        <button id="btn_lang" tooltip="Change language" Disabled="True">EN</button>
                          <rectangle/>
                         <label id="lbl_chars">500</label>
                     </hgroup>
