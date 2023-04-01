@@ -23,7 +23,7 @@ It allows the user to connect and authenticate with a Mastodon server instance, 
 Amidon is designed to be a portable application. Just place the binary in any directory you want and run it from there.  It will generate it's own settings and `cache` directory on startup.
 
 ### Known issues
-- It's slow to start-up, about 13 seconds on an 060/50 MHz. But it's rather usable afterwards, so please be patient!
+- It's slow to start-up on a real Amiga. I counted about 13 seconds on an 060/50 MHz from the moment you double-click on the icon. However, it's rather usable afterwards, so please be patient!
 - HTMLview, the MUI class used to display HTML content in Amidon, has issues with some versions of MUI on AmigaOS 3.x. It will not show any content on MUI 4 or 5, so it only works properly on MUI 3.9 currently. If you don't care about that functionality, you can of course use MUI 4 or 5 normally otherwise.
 - HTMLview seems to have issues showing any content behind HTTPS links (e.g. images).
 - MUI 3.8 also works, but it has several rendering issues with the content in the listviews, so it's not recommended.
