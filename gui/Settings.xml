@@ -2,7 +2,7 @@
     <vgroup>
         <vgroup Frame="True" FrameTitle="Mastodon options">
             <Text>
-                The Mastodon server to connect to.
+                The Mastodon server to connect to
             </Text>
             <hgroup>
                 <Text>Server:</Text>
@@ -13,7 +13,7 @@
         <vgroup Frame="True" FrameTitle="Login">
             <Text>
                 You can login for your personalized feed,\n
-                or browse the server anonymously.
+                or browse the server anonymously
             </Text>
             <hgroup>
                 <rectangle/>
