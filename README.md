@@ -12,7 +12,7 @@ It allows the user to connect and authenticate with a Mastodon server instance, 
 
 ## Requirements
 - AmigaOS 3.x
-- AmiSSL 4 (or newer)
+- AmiSSL 4
 - MUI 3.9 or newer (but see known issues for newer versions)
 - 68020+ CPU
 - 8MB of RAM
