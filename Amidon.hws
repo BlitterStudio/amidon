@@ -104,7 +104,7 @@ Global htmlview_dialog = Nil
 Global visibility_dialog_file = 9
 Global visilibity_dialog = Nil
 
-Global user_avatar_brush = 6
+Global user_avatar_brush = 1
 
 ; Content related variables
 Global last_notification_id = Nil
@@ -116,6 +116,8 @@ Global last_favourite_id = Nil
 Global last_bookmark_id = Nil
 Global last_list_id = Nil
 Global last_request_id = Nil
+Global last_profile_post_id = Nil
+Global last_profile_post_replies_id = Nil
 
 Global selected_id = Nil
 Global selected_content = Nil

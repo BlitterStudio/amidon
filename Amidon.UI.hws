@@ -334,22 +334,49 @@ Function p_WriteListView(index, item, type)
             moai.DoMethod("lv_followrequests", "Insert", "Top", base:StripHTML(content), item["id"], "follow_request")
         EndIf
 
+    Case "profile_posts":
+        If last_profile_post_id <> item["id"]
+            last_profile_post_id = item["id"]
+
+            Local content = item["account"]["display_name"] .. ": " .. item["content"]
+            moai.DoMethod("lv_profile_posts", "Insert", "Top", base:StripHTML(content), item["reblogged"], item["favourited"], item["bookmarked"], item["id"], "status")
+        EndIf
+
+    Case "profile_posts_and_replies":
+        If last_profile_post_replies_id <> item["id"]
+            last_profile_post_replies_id = item["id"]
+
+            Local content = item["account"]["display_name"] .. ": " .. item["content"]
+            moai.DoMethod("lv_profile_posts_and_replies", "Insert", "Top", base:StripHTML(content), item["reblogged"], item["favourited"], item["bookmarked"], item["id"], "status")
+        EndIf
     EndSwitch
 EndFunction
 
 Function p_SetUsernameLabel()
     If Not account = Nil And HasItem(account, "acct") And Not EmptyStr(account.acct)
         moai.Set("lbl_profile", "Text", "@" .. account.acct)
+        moai.Set("lbl_profile_username", "Text", account.display_name)
+        moai.Set("txt_profile_description", "Text", base:StripHTML(account.note))
+        moai.Set("lbl_profile_posts", "Text", account.statuses_count .. " Posts")
+        moai.Set("lbl_profile_following", "Text", account.following_count .. " Following")
+        moai.Set("lbl_profile_followers", "Text", account.followers_count .. " Followers")
     Else
         moai.Set("lbl_profile", "Text", "Anonymous")
+        moai.Set("lbl_profile_username", "Text", "Anonymous")
+        moai.Set("txt_profile_description", "Text", "")
+        moai.Set("lbl_profile_posts", "Text", "")
+        moai.Set("lbl_profile_following", "Text", "")
+        moai.Set("lbl_profile_followers", "Text", "")
     EndIf
 EndFunction
 
 Function p_SetServerLabel()
     If Not EmptyStr(settings.server)
         moai.Set("lbl_instance", "Text", settings.server)
+        moai.Set("lbl_profile_instance", "Text", "@" .. account.acct .. "@" .. settings.server)
     Else
         moai.Set("lbl_instance", "Text", "NONE")
+        moai.Set("lbl_profile_instance", "Text", "NONE")
     EndIf
 EndFunction
 
@@ -402,6 +429,12 @@ Function p_GetActiveListview()
         Return("lv_lists")
     Case 8: ;Follow Requests
         Return("lv_followrequests")
+    Case 9: ;Profile
+        If moai.Get("pv_profile", "Active") = 0 ; Posts
+            Return("lv_profile_posts")
+        Else ; Posts and Replies
+            Return("lv_profile_posts_and_replies")
+        EndIf
     EndSwitch
 EndFunction
 
@@ -417,12 +450,16 @@ Function p_UpdateActionButtonState()
     Local btn_bookmark
     Local active_listview = p_GetActiveListview()
     active_listview = UnrightStr(active_listview, 3)
+    If #DEBUG Then DebugPrint("Active Listview: " .. active_listview)
 
     ; Special cases first
     If active_listview = "mentions" Then active_listview = "notifications" ; Two tabs in the same pageview
     If active_listview = "posts" Then active_listview = "explore"
     If active_listview = "local" Or active_listview = "federated" Then active_listview = "timeline" ; Two tabs in the same pageview
-    
+    If active_listview = "profile_posts" Or active_listview = "profile_posts_and_replies" Then active_listview = "profile"
+
+    If #DEBUG Then DebugPrint("Active Listview after special cases: " .. active_listview)
+
     btn_boost = "btn_" .. active_listview .. "_boost"
     btn_favourite = "btn_" .. active_listview .. "_favourite"
     btn_bookmark = "btn_" .. active_listview .. "_bookmark"
@@ -507,7 +544,9 @@ Function p_DoubleClickEvent(id)
     Case "lv_federated":
     Case "lv_dm":
     Case "lv_favourites":
-    Case "lv_bookmarks": 
+    Case "lv_bookmarks":
+    Case "lv_profile_posts":
+    Case "lv_profile_posts_and_replies":
         If #DEBUG Then DebugPrint("Double click on Notifications listview triggered")
         If ToNumber(selected_id) > 0
             Local status = p_GetSingleContent(selected_id, selected_type)
@@ -553,6 +592,7 @@ Function p_GUIEvent(id)
     Case "btn_favourites_reply":
     Case "btn_dm_reply":
     Case "btn_bookmarks_reply":
+    Case "btn_profile_reply":
         If #DEBUG Then DebugPrint("Reply button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             moai.Set("txt_reply_to", "Hide", False)
@@ -568,6 +608,7 @@ Function p_GUIEvent(id)
     Case "btn_timeline_boost":
     Case "btn_favourites_boost":
     Case "btn_bookmarks_boost":
+    Case "btn_profile_boost":
         If #DEBUG Then DebugPrint("Boost button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             Local lv = p_GetActiveListview()
@@ -590,6 +631,7 @@ Function p_GUIEvent(id)
     Case "btn_timeline_favourite":
     Case "btn_favourites_favourite":
     Case "btn_bookmarks_favourite":
+    Case "btn_profile_favourite":
         If #DEBUG Then DebugPrint("Favourite button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             Local lv = p_GetActiveListview()
@@ -612,6 +654,7 @@ Function p_GUIEvent(id)
     Case "btn_timeline_bookmark":
     Case "btn_favourites_bookmark":
     Case "btn_bookmarks_bookmark":
+    Case "btn_profile_bookmark":
         If #DEBUG Then DebugPrint("Bookmark button pressed, selected Id was ".. selected_id)
         If ToNumber(selected_id) > 0
             Local lv = p_GetActiveListview()
@@ -634,6 +677,8 @@ Function p_GUIEvent(id)
     Case "lv_federated":
     Case "lv_favourites":
     Case "lv_bookmarks":
+    Case "lv_profile_posts":
+    Case "lv_profile_posts_and_replies":
         selected_content, selected_reblogged, selected_favourite, selected_bookmark, selected_id, selected_type = moai.DoMethod(id, "GetEntry", "Active")
         p_UpdateActionButtonState()
         If #DEBUG Then DebugPrint("Listview selected item changed, id: " .. selected_id)
@@ -692,6 +737,14 @@ Function p_GUIEvent(id)
         EnableLineHook()
         Break
 
+    Case "btn_getprofile":
+        DisableLineHook()
+        p_GetContent("profile")
+        p_SetUsernameLabel()
+        p_GetContent("profile_posts")
+        p_GetContent("profile_posts_and_replies")
+        EnableLineHook()
+        Break
     Case "btn_WelcomeDialogOK":
         moai.DoMethod("dlg_welcome", "EndModal", 1)
         p_OpenSettingsDialog()

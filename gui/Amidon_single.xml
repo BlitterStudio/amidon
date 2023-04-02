@@ -18,6 +18,7 @@
 
             <hgroup>
                 <image id="img_avatar" brush="1"/>
+                <HSpace Width="5"/>
                 <vgroup>
                     <label id="lbl_profile" Align="Left">@long.username</label>
                     <label id="lbl_instance" Align="Left">@long.instance.server.name</label>
@@ -25,7 +26,8 @@
                 <rectangle/>
                 <image brush="2"/>
             </hgroup>
-
+            <VSpace Height="5"/>
+            
             <pageview id="pv_main" mode="List">
                 <vgroup title="Publish">
 
@@ -271,6 +273,61 @@
                         <column title="id" hide="True"/>
                         <column title="type" hide="True"/>
                     </Listview>
+                </vgroup>
+
+                <vgroup title="Profile">
+              
+                    <hgroup>
+                        <image id="img_profile_avatar" brush="1"/>
+                        <HSpace Width="5"/>
+                        <vgroup>
+                            <label id="lbl_profile_username" Align="Left">@very.very.long.username</label>
+                            <label id="lbl_profile_instance" Align="Left">@very.very.long.instance.server.name</label>
+                        </vgroup>
+                        <rectangle/>
+                    </hgroup>
+                    <VSpace Height="5"/>
+                    <TextView id="txt_profile_description" Weight="50"/>
+ 
+                    <hgroup Weight="50">
+                        <Label id="lbl_profile_posts" Align="Left">XXXXXX Posts</Label>
+                        <HSpace Width="5"/>
+                        <Label id="lbl_profile_following" Align="Left">XXXXXX Following</Label>
+                        <HSpace Width="5"/>
+                        <Label id="lbl_profile_followers" Align="Left">XXXXXX Followers</Label>
+                        <rectangle/>
+                    </hgroup>
+
+                    <button id="btn_getprofile" tooltip="Refresh">Refresh</button>
+                    <pageview id="pv_profile" Weight="200">
+                        <hgroup title="Posts">
+                            <Listview id="lv_profile_posts" Alternate="True" HRules="True" Notify="Active; DoubleClick">
+                                <column title="Content"/>
+                                <column title="R" Hide="True"/>
+                                <column title="F" Hide="True"/>
+                                <column title="B" Hide="True"/>
+                                <column title="id" hide="True"/>
+                                <column title="type" hide="True"/>
+                            </Listview>
+                        </hgroup>
+                        <hgroup title="Posts and replies">
+                            <Listview id="lv_profile_posts_and_replies" Alternate="True" HRules="True" Notify="Active; DoubleClick">
+                                <column title="Content"/>
+                                <column title="R" Hide="True"/>
+                                <column title="F" Hide="True"/>
+                                <column title="B" Hide="True"/>
+                                <column title="id" hide="True"/>
+                                <column title="type" hide="True"/>
+                            </Listview>
+                        </hgroup>
+                    </pageview>
+                    <hgroup>
+                        <button id="btn_profile_reply" icon="6" tooltip="Reply"/>
+                        <button id="btn_profile_boost" icon="7" tooltip="Boost" Toggle="True"/>
+                        <button id="btn_profile_favourite" icon="8" tooltip="Favorite" Toggle="True"/>
+                        <button id="btn_profile_bookmark" icon="9" tooltip="Bookmark" Toggle="True"/>
+                        <rectangle/>
+                    </hgroup>
                 </vgroup>
 
             </pageview>

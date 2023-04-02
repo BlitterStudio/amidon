@@ -24,8 +24,10 @@
 ** Deserialize JSON response to a Table and iterate through items
 */
 Function p_DeserializeJson(type)
-    Local table = Nil
+    If #DEBUG Then DebugPrint("Deserializing JSON for type " .. type)
+    ;If #DEBUG Then DebugPrint("JSON content: " .. json)
 
+    Local table = Nil
     table = DeserializeTable(json)
     json = Nil;
 
@@ -43,11 +45,15 @@ Function p_DeserializeJson(type)
     Case "bookmarks":
     Case "lists":
     Case "followrequests":
+    Case "profile_posts":
+    Case "profile_posts_and_replies":
         Local listview = "lv_" .. type
         moai.Set(listview, "Quiet", True)
         ForEach(table, p_WriteListView, type)
         moai.Set(listview, "Quiet", False)
         Break
+    Case "profile":
+        account = table
     Case "token":
     Case "verify_account":
     Case "publish_status":
@@ -149,6 +155,12 @@ Function p_GetContent(type)
         api_endpoint = p_GetLists(last_list_id)
     Case "followrequests":
         api_endpoint = p_GetFollowRequests(last_request_id)
+    Case "profile":
+        api_endpoint = p_GetAccount(account.id)
+    Case "profile_posts":
+        api_endpoint = p_GetAccountStatuses(account.id, last_profile_post_id, "true")
+    Case "profile_posts_and_replies":
+        api_endpoint = p_GetAccountStatuses(account.id, last_profile_post_replies_id, "false")
     EndSwitch
 
     If #DEBUG Then DebugPrint("API endpoint:", api_endpoint)
@@ -286,7 +298,9 @@ Function p_GetAccountAvatar(force)
         DownloadFile(account.avatar, {File = filename, Adapter = "hurl"})
     EndIf
     LoadBrush(user_avatar_brush, filename)
-    ScaleBrush(user_avatar_brush, "25%", "25%", True)
+    ScaleBrush(user_avatar_brush, "90", "90", True)
+    moai.Set("img_profile_avatar", "Brush", user_avatar_brush)
+    ScaleBrush(user_avatar_brush, "46", "46", True)
     moai.Set("img_avatar", "Brush", user_avatar_brush)
 EndFunction
 

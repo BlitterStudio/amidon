@@ -87,8 +87,14 @@ Function p_GetAccount(account_id)
     Return("/api/v1/accounts/" .. account_id)
 EndFunction
 
-Function p_GetAccountStatuses(account_id)
-    Return("/api/v1/accounts/" .. account_id .. "/statuses")
+Function p_GetAccountStatuses(account_id, since_id, exclude_replies)
+    Local endpoint = "/api/v1/accounts/" .. account_id .. "/statuses?exclude_replies=" .. exclude_replies
+
+    If since_id <> Nil
+        endpoint = endpoint .. "&since_id=" .. since_id
+    EndIf
+
+    Return(endpoint)
 EndFunction
 
 Function p_GetStatusEntity(status_id)
