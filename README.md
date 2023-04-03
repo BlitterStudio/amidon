@@ -14,8 +14,8 @@ It allows the user to connect and authenticate with a Mastodon server instance, 
 - AmigaOS 3.x
 - AmiSSL 4
 - MUI 3.9 or newer (but see known issues for newer versions)
-- MUI classes: `Hyperlink.mcc` (available in the MUI 4.x and 5.x archives, but works with 3.9 also), `TextEditor.mcc`, `HTMLview.mcc`
-- `codesets.library`
+- MUI classes: `Hyperlink.mcc` (available in the MUI 4.x and 5.x archives, but works with 3.9 also), [`TextEditor.mcc`](http://aminet.net/package/dev/mui/MCC_TextEditor-15.56), [`HTMLview.mcc`](http://aminet.net/package/dev/mui/MCC_HTMLview-13.4)
+- [`codesets.library`](http://aminet.net/package/util/libs/codesets-6.21)
 - 68020+ CPU
 - 8MB of RAM
 - An internet connection
