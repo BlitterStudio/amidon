@@ -14,6 +14,7 @@ It allows the user to connect and authenticate with a Mastodon server instance, 
 - AmigaOS 3.x
 - AmiSSL 4
 - MUI 3.9 or newer (but see known issues for newer versions)
+- MUI classes: `Hyperlink` (available in the MUI 4.x and 5.x archives, but works with 3.9 also), `TextEditor`
 - 68020+ CPU
 - 8MB of RAM
 - An internet connection
