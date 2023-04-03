@@ -18,7 +18,7 @@ It allows the user to connect and authenticate with a Mastodon server instance, 
 - [`codesets.library`](http://aminet.net/package/util/libs/codesets-6.21)
 - 68020+ CPU
 - 8MB of RAM
-- An internet connection
+- An internet connection and a TCP/IP stack running (cURL will check for `bsdsocket.library` on startup). AmiTCP 4, Roadshow or emulators with the `bsdsocket.library` option enabled will work.
 - A web browser will be needed once, for the first time you authenticate your account
 
 ## Installation
