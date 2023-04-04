@@ -4,7 +4,7 @@
 ** Description: a Mastodon client for AmigaOS                  **
 ** Author:      Dimitris Panokostas                            **
 ** Version:     1.1                                            **
-** Date:        2023-04-02                                     **
+** Date:        2023-04-04                                     **
 ** Interpreter: Hollywood 9.1+                                 **
 **                                                             **
 ****************************************************************/
@@ -39,7 +39,7 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 ** Information about this app
 */
 @APPTITLE "Amidon"
-@APPVERSION "$VER: Amidon 1.1 (2023-04-02)"
+@APPVERSION "$VER: Amidon 1.1 (2023-04-04)"
 @APPCOPYRIGHT "(C) Copyright 2023 by Dimitris Panokostas"
 @APPAUTHOR "Dimitris Panokostas"
 @APPDESCRIPTION "A Mastodon client for AmigaOS"
