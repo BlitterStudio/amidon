@@ -759,9 +759,8 @@ Function p_GUIEvent(id)
         Break
     Case "btn_openlogin":
         p_ParseSettings()
-        If token = Nil
-            p_GetServerAuthorization()
-        EndIf
+        If settings.server = Nil Or settings.server = "" Then p_OpenGenericDialog("Missing server information", "You need to provide a server before you can login!")
+        If token = Nil Then p_GetServerAuthorization()
         p_OpenLoginDialog()
         Break
     Case "btn_LoginSaveCode":
