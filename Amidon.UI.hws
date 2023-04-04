@@ -30,7 +30,7 @@ EndFunction
 Function p_OpenLoginDialog()
     While Not Eof(login_dialog_file) Do login_dialog = login_dialog .. ReadLine(login_dialog_file)
     moai.CreateDialog(login_dialog)
-    moai.Set("lnk_login", "URL", p_GetAuthorizeUserUrl())
+    moai.Set("txt_login_link", "Text", p_GetAuthorizeUserUrl())
     moai.DoMethod("dlg_login", "ShowModal")
 EndFunction
 
@@ -838,6 +838,13 @@ Function p_GUIEvent(id)
         Break
     Case "btn_changeprivacy":
         p_OpenVisibilityDialog(active_visibility_index)
+        Break
+    Case "btn_login_link_copy":
+        SetClipboard(#CLIPBOARD_TEXT, moai.Get("txt_login_link", "Text"))
+        Break
+    Case "btn_code_paste":
+        type, data = GetClipboard()
+        If type = #CLIPBOARD_TEXT Then moai.Set("txt_code", "Text", data)
         Break
     Case "btn_dlg_OK":
         moai.DoMethod("dlg_generic", "EndModal", 0)

@@ -1,20 +1,23 @@
 <dialog id="dlg_login" title="Login to Mastodon">
     <vgroup>
         <Text>
-            Please click on the following link to\n
-            open the login window in your browser.\n
-            \n
-            After you have logged in successfully,\n
-            please copy the auth code shown on\n
-            your browser, to the "code" field below.\n
-            \n
+            Please copy the following link and paste it in your browser's\n
+            address bar (with RAmiga-V), to open the server login form.\n\n
+            After you have logged in successfully, please copy the auth\n
+            code shown on your browser (RAmiga-C), into the "Code" field\n
+            below.\n\n
             Click Save to save the token to the cache.
         </Text>
-        <hyperlink id="lnk_login" label="Click me">https://blitterstudio.com</hyperlink>
-        <rectangle/>
+        <Textview id="txt_login_link" Width="80">https://blitterstudio.com</Textview>
+        <Button id="btn_login_link_copy">Copy</Button>
+        <VSpace Height="5"/>
         <Text>Code:</Text>
-        <TextEntry id="txt_code"></TextEntry>
-        <rectangle/>
+        <VSpace Height="5"/>
+        <hgroup>
+            <TextEntry id="txt_code"/>
+            <Button id="btn_code_paste" Weight="35">Paste</Button>
+        </hgroup>
+        <VSpace Height="5"/>
 
         <hgroup>
             <button id="btn_LoginSaveCode">Save</button>
