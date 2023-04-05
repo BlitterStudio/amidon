@@ -5,7 +5,7 @@
 		}
 	],
 	"settings": {
-		"hollywood.mainFile": "Amidon.hws",
+		"hollywood.mainFile": "src/Amidon.hws",
 		"hollywood.outputExeType": "classic",
 		"hollywood.mainOutputFile": "Amidon_OS3"
 	}
