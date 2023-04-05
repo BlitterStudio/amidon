@@ -373,7 +373,11 @@ EndFunction
 Function p_SetServerLabel()
     If Not EmptyStr(settings.server)
         moai.Set("lbl_instance", "Text", settings.server)
-        moai.Set("lbl_profile_instance", "Text", "@" .. account.acct .. "@" .. settings.server)
+        If account <> Nil And Not EmptyStr(account.acct)
+            moai.Set("lbl_profile_instance", "Text", "@" .. account.acct .. "@" .. settings.server)
+        Else
+            moai.Set("lbl_profile_instance", "Text", "@" .. settings.server)
+        EndIf
     Else
         moai.Set("lbl_instance", "Text", "NONE")
         moai.Set("lbl_profile_instance", "Text", "NONE")
@@ -759,7 +763,10 @@ Function p_GUIEvent(id)
         Break
     Case "btn_openlogin":
         p_ParseSettings()
-        If settings.server = Nil Or settings.server = "" Then p_OpenGenericDialog("Missing server information", "You need to provide a server before you can login!")
+        If settings.server = Nil Or settings.server = "" 
+            p_OpenGenericDialog("Missing server information", "You need to provide a server before you can login!")
+            Break
+        EndIf
         If token = Nil Then p_GetServerAuthorization()
         p_OpenLoginDialog()
         Break
