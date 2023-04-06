@@ -64,12 +64,12 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 ; We reserve 1 for our prefs file, if it exists (see below)
 ;@FILE 1, "settings.json"
 @FILE 2, "gui/Amidon_single.xml"
-@FILE 4, "gui/Welcome.xml"
-@FILE 5, "gui/Settings.xml"
-@FILE 6, "gui/Login.xml"
-@FILE 7, "gui/Dialog.xml"
-@FILE 8, "gui/HtmlView.xml"
-@FILE 9, "gui/SelectVisibility.xml"
+@FILE 3, "gui/Welcome.xml"
+@FILE 4, "gui/Settings.xml"
+@FILE 5, "gui/Login.xml"
+@FILE 6, "gui/Dialog.xml"
+@FILE 7, "gui/HtmlView.xml"
+@FILE 8, "gui/SelectVisibility.xml"
 
 @DISPLAY {Title = "Amidon", Sizeable = True, Layers = True}
 @INCLUDE "Amidon.Domain.hws"
@@ -88,17 +88,17 @@ Global token = Nil
 Global account = Nil
 
 Global settings_file = 1
-Global welcome_dialog_file = 4
+Global welcome_dialog_file = 3
 Global welcome_dialog = Nil
-Global settings_dialog_file = 5
+Global settings_dialog_file = 4
 Global settings_dialog = Nil
-Global login_dialog_file = 6
+Global login_dialog_file = 5
 Global login_dialog = Nil
-Global generic_dialog_file = 7
+Global generic_dialog_file = 6
 Global generic_dialog = Nil
-Global htmlview_dialog_file = 8
+Global htmlview_dialog_file = 7
 Global htmlview_dialog = Nil
-Global visibility_dialog_file = 9
+Global visibility_dialog_file = 8
 Global visilibity_dialog = Nil
 
 Global user_avatar_brush = 1
