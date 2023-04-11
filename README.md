@@ -19,6 +19,7 @@ It allows the user to connect and authenticate with a Mastodon server instance, 
   - [`BetterString.mcc`](http://aminet.net/package/dev/mui/MCC_BetterString-11.36) (required by TextEditor)
   - [`HTMLview.mcc`](http://aminet.net/package/dev/mui/MCC_HTMLview-13.4)
 - [`codesets.library`](http://aminet.net/package/util/libs/codesets-6.21)
+- [`guigfx.library`](http://aminet.net/package/dev/misc/guigfxlib)
 - 68020+ CPU
 - 8MB of RAM
 - An internet connection and a TCP/IP stack running (cURL will check for `bsdsocket.library` on startup). AmiTCP 4, Roadshow or emulators with the `bsdsocket.library` option enabled will work.
