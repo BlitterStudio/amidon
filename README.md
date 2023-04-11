@@ -12,8 +12,8 @@ It allows the user to connect and authenticate with a Mastodon server instance, 
 
 ## Requirements
 - AmigaOS 3.x
-- AmiSSL 4
-- MUI 3.9 or newer (but see known issues for newer versions)
+- [`AmiSSL 4.12`](http://aminet.net/package/util/libs/AmiSSL-4.12) (you can also install [`AmiSSL 5.x`](http://aminet.net/package/util/libs/AmiSSL-5.8-OS3) to get the latest certs, but Amidon requires v4.x currently)
+- [`MUI 3.9`](https://github.com/amiga-mui/muidev/releases/tag/MUI-3.9-2015R1) or newer (but see known issues for newer versions)
 - The following MUI classes: 
   - [`TextEditor.mcc`](http://aminet.net/package/dev/mui/MCC_TextEditor-15.56)
   - [`BetterString.mcc`](http://aminet.net/package/dev/mui/MCC_BetterString-11.36) (required by TextEditor)
