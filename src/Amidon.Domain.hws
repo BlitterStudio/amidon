@@ -156,10 +156,13 @@ Function p_GetContent(type)
     Case "followrequests":
         api_endpoint = p_GetFollowRequests(last_request_id)
     Case "profile":
+        If anonymous = True Then Return(Nil)
         api_endpoint = p_GetAccount(account.id)
     Case "profile_posts":
+        If anonymous = True Then Return(Nil)
         api_endpoint = p_GetAccountStatuses(account.id, last_profile_post_id, "true")
     Case "profile_posts_and_replies":
+        If anonymous = True Then Return(Nil)
         api_endpoint = p_GetAccountStatuses(account.id, last_profile_post_replies_id, "false")
     EndSwitch
 
@@ -291,7 +294,7 @@ EndFunction
 
 ; Get the logged-in account avatar and save it in the cache
 Function p_GetAccountAvatar(force)
-    If account = Nil Or Not HasItem(account, "avatar") Or EmptyStr(account.avatar) Then Return
+    If anonymous = True Or Not HasItem(account, "avatar") Or EmptyStr(account.avatar) Then Return
     Local filename = "cache/" .. settings.server .. "/avatar.png"
     If Not Exists (filename) Or force = True
         ; The avatar is an HTTPS link to an image file

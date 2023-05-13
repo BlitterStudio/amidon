@@ -3,8 +3,8 @@
 ** Name:        Amidon                                         **
 ** Description: a Mastodon client for AmigaOS                  **
 ** Author:      Dimitris Panokostas                            **
-** Version:     1.1                                            **
-** Date:        2023-04-04                                     **
+** Version:     1.2                                            **
+** Date:        2023-05-13                                     **
 ** Interpreter: Hollywood 9.1+                                 **
 **                                                             **
 ****************************************************************/
@@ -39,7 +39,7 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 ** Information about this app
 */
 @APPTITLE "Amidon"
-@APPVERSION "$VER: Amidon 1.1 (2023-04-04)"
+@APPVERSION "$VER: Amidon 1.2 (2023-05-13)"
 @APPCOPYRIGHT "(C) Copyright 2023 by Dimitris Panokostas"
 @APPAUTHOR "Dimitris Panokostas"
 @APPDESCRIPTION "A Mastodon client for AmigaOS"
@@ -86,6 +86,7 @@ Global creds = Nil
 Global json = Nil
 Global token = Nil
 Global account = Nil
+Global anonymous = Nil
 
 Global settings_file = 1
 Global welcome_dialog_file = 3
@@ -178,6 +179,13 @@ If Not settings.server = Nil And Not EmptyStr(settings.server)
 	p_GetServerAuthorization()	
 	If #DEBUG Then DebugPrint("Token loaded from file: ", token.access_token)
 	account = p_GetVerifyAccountCredentials()
+EndIf
+
+; Check if we are browsing the server in anonymous mode (no login performed)
+If Not account = Nil And HasItem(account, "acct") And Not EmptyStr(account.acct)
+	anonymous = False
+Else
+	anonymous = True
 EndIf
 
 moai.Set("main", "Open", True)

@@ -218,6 +218,7 @@ EndFunction
 Function p_WriteListView(index, item, type)
     Switch type
     Case "notifications":
+        If anonymous = True Then Return
         ; If the new content is different than the last one we got, insert it at the top
         If last_notification_id <> item["id"]
             last_notification_id = item["id"]
@@ -253,6 +254,7 @@ Function p_WriteListView(index, item, type)
         EndIf
 
     Case "mentions":
+        If anonymous = True Then Return
         ; If the new content is different than the last one we got, insert it at the top
         If last_mention_id <> item["id"]
             last_mention_id = item["id"]
@@ -263,8 +265,11 @@ Function p_WriteListView(index, item, type)
 
     Case "posts":
         Local content = item["account"]["display_name"] .. ": " .. item["content"]
-        moai.DoMethod("lv_posts", "Insert", "Top", base:StripHTML(content), item["reblogged"], item["favourited"], item["bookmarked"], item["id"], "status")
-
+        If anonymous = False
+            moai.DoMethod("lv_posts", "Insert", "Top", base:StripHTML(content), item["reblogged"], item["favourited"], item["bookmarked"], item["id"], "status")
+        Else
+            moai.DoMethod("lv_posts", "Insert", "Top", base:StripHTML(content), False, False, False, item["id"], "status")
+        EndIf
     Case "hashtags":
         Local content = "#" .. item["name"]
         moai.DoMethod("lv_hashtags", "Insert", "Top", base:StripHTML(content))
@@ -274,6 +279,7 @@ Function p_WriteListView(index, item, type)
         moai.DoMethod("lv_news", "Insert", "Top", base:StripHTML(content))
 
     Case "foryou":
+        If anonymous = True Then Return
         Local content = item["account"]["display_name"] .. ": " .. item["account"]["acct"]
         moai.DoMethod("lv_foryou", "Insert", "Top", base:StripHTML(content))
 
@@ -282,7 +288,11 @@ Function p_WriteListView(index, item, type)
             last_local_timeline_id = item["id"]
 
             Local content = item["account"]["display_name"] .. ": " .. item["content"]
-            moai.DoMethod("lv_local", "Insert", "Top", base:StripHTML(content), item["reblogged"], item["favourited"], item["bookmarked"], item["id"], "status")
+            If anonymous = False
+                moai.DoMethod("lv_local", "Insert", "Top", base:StripHTML(content), item["reblogged"], item["favourited"], item["bookmarked"], item["id"], "status")
+            Else
+                moai.DoMethod("lv_local", "Insert", "Top", base:StripHTML(content), False, False, False, item["id"], "status")
+            EndIf
         EndIf
 
     Case "federated":
@@ -290,10 +300,15 @@ Function p_WriteListView(index, item, type)
             last_federated_timeline_id = item["id"]
 
             Local content = item["account"]["display_name"] .. ": " .. item["content"]
-            moai.DoMethod("lv_federated", "Insert", "Top", base:StripHTML(content), item["reblogged"], item["favourited"], item["bookmarked"], item["id"], "status")
+            If anonymous = False
+                moai.DoMethod("lv_federated", "Insert", "Top", base:StripHTML(content), item["reblogged"], item["favourited"], item["bookmarked"], item["id"], "status")
+            Else
+                moai.DoMethod("lv_federated", "Insert", "Top", base:StripHTML(content), False, False, False, item["id"], "status")
+            EndIf
         EndIf
 
     Case "dm":
+        If anonymous = True Then Return
         If last_dm_id <> item["id"]
             last_dm_id = item["id"]
 
@@ -304,6 +319,7 @@ Function p_WriteListView(index, item, type)
         EndIf
 
     Case "favourites":
+        If anonymous = True Then Return
         If last_favourite_id <> item["id"]
             last_favourite_id = item["id"]
 
@@ -312,6 +328,7 @@ Function p_WriteListView(index, item, type)
         EndIf
 
     Case "bookmarks":
+        If anonymous = True Then Return
         If last_bookmark_id <> item["id"]
             last_bookmark_id = item["id"]
 
@@ -320,6 +337,7 @@ Function p_WriteListView(index, item, type)
         EndIf
 
     Case "lists":
+        If anonymous = True Then Return
         If last_list_id <> item["id"]
             last_list_id = item["id"]
 
@@ -327,6 +345,7 @@ Function p_WriteListView(index, item, type)
         EndIf
 
     Case "followrequests":
+        If anonymous = True Then Return
         If last_request_id <> item["id"]
             last_request_id = item["id"]
 
@@ -335,6 +354,7 @@ Function p_WriteListView(index, item, type)
         EndIf
 
     Case "profile_posts":
+        If anonymous = True Then Return
         If last_profile_post_id <> item["id"]
             last_profile_post_id = item["id"]
 
@@ -343,6 +363,7 @@ Function p_WriteListView(index, item, type)
         EndIf
 
     Case "profile_posts_and_replies":
+        If anonymous = True Then Return
         If last_profile_post_replies_id <> item["id"]
             last_profile_post_replies_id = item["id"]
 
@@ -353,7 +374,7 @@ Function p_WriteListView(index, item, type)
 EndFunction
 
 Function p_SetUsernameLabel()
-    If Not account = Nil And HasItem(account, "acct") And Not EmptyStr(account.acct)
+    If anonymous = False
         moai.Set("lbl_profile", "Text", "@" .. account.acct)
         moai.Set("lbl_profile_username", "Text", account.display_name)
         moai.Set("txt_profile_description", "Text", base:StripHTML(account.note))
@@ -373,7 +394,7 @@ EndFunction
 Function p_SetServerLabel()
     If Not EmptyStr(settings.server)
         moai.Set("lbl_instance", "Text", settings.server)
-        If account <> Nil And Not EmptyStr(account.acct)
+        If anonymous = False
             moai.Set("lbl_profile_instance", "Text", "@" .. account.acct .. "@" .. settings.server)
         Else
             moai.Set("lbl_profile_instance", "Text", "@" .. settings.server)
