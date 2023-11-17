@@ -179,7 +179,7 @@ Function p_SetMediaStatus()
     DisableLineHook() ; Temporarily disable this, to increase performance
 
     If IsTableEmpty(media_ids)
-        If #DEBUG Then DebugPrint("Media ids table was empty, hidding all text entries...")
+        If #DEBUG Then DebugPrint("Media ids table was empty, hiding all text entries...")
         ; Hide all media text entries
         For Local i = 1 To 4
             moai.Set("grp_media" .. i, "Hide", True)
@@ -197,7 +197,7 @@ Function p_SetMediaStatus()
             Next
         EndIf
         If items < 4
-            If #DEBUG Then DebugPrint("Hidding extra text entries")
+            If #DEBUG Then DebugPrint("Hiding extra text entries")
             Local idx = items + 1
             While idx < 4
                 moai.Set("grp_media" .. idx, "Hide", True)
