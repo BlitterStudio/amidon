@@ -3,7 +3,7 @@
 ** Name:        Amidon                                         **
 ** Description: a Mastodon client for AmigaOS                  **
 ** Author:      Dimitris Panokostas                            **
-** Version:     1.2                                            **
+** Version:     1.3                                            **
 ** Date:        2023-05-13                                     **
 ** Interpreter: Hollywood 9.1+                                 **
 **                                                             **
@@ -28,7 +28,7 @@
 */
 
 ; Constants
-Const #ABOUTMSG = "Amidon - a Mastodon client for AmigaOS\nCopyright (C) 2023 Dimitris Panokostas\n"
+Const #ABOUTMSG = "Amidon v1.3 - a Mastodon client for AmigaOS\nCopyright (C) 2023 Dimitris Panokostas\n"
 Const #DEBUG = False ; Set this to True to get DEBUG output
 
 @VERSION 9,1
@@ -39,12 +39,10 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 ** Information about this app
 */
 @APPTITLE "Amidon"
-@APPVERSION "$VER: Amidon 1.2 (2023-05-13)"
+@APPVERSION "$VER: Amidon 1.3 (2023-11-20)"
 @APPCOPYRIGHT "(C) Copyright 2023 by Dimitris Panokostas"
 @APPAUTHOR "Dimitris Panokostas"
 @APPDESCRIPTION "A Mastodon client for AmigaOS"
-
-@BGPIC 1, "assets/Amidon_logo.png"
 
 /*
 ** Button and list view images
@@ -71,7 +69,6 @@ Const #DEBUG = False ; Set this to True to get DEBUG output
 @FILE 7, "gui/HtmlView.xml"
 @FILE 8, "gui/SelectVisibility.xml"
 
-@DISPLAY {Title = "Amidon", Sizeable = True, Layers = True}
 @INCLUDE "Amidon.Domain.hws"
 @INCLUDE "Amidon.Settings.hws"
 @INCLUDE "Amidon.UI.hws"
